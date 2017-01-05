@@ -8,7 +8,7 @@ s.summary = "WeePager is a weeeeee pager."
 s.requires_arc = true
 
 # 2
-s.version = "0.1.0"
+s.version = "0.0.2"
 
 # 3
 s.license = { :type => "MIT", :file => "LICENSE" }
@@ -29,8 +29,8 @@ s.source = { :git => "https://github.com/FedeGens/WeePager.git", :tag => "#{s.ve
 s.framework = "UIKit"
 
 # 8
-s.source_files = "WeePager/**/*.{swift}"
+s.source_files = "WeePager/*.{swift}"
 
 # 9
-s.resources = "WeePager/**/*.{png,jpeg,jpg,storyboard,xib}"
+#s.resources = "WeePager/**/*.{png,jpeg,jpg,storyboard,xib}"
 end

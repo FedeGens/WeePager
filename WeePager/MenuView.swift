@@ -34,7 +34,8 @@ class MenuView: UIScrollView {
         showsHorizontalScrollIndicator = false
         
         var myOffset: CGFloat = pagerReference.menuInset
-        
+        let menuButtonY = (pagerReference.menuItemsAreCentered) ? (pagerReference.menuHeight - pagerReference.menuItemHeight)/2 : 0
+
         // Create and add buttons to menu
         for i in 0...titles.count-1 {
             let menuButton = UIButton()
@@ -59,7 +60,6 @@ class MenuView: UIScrollView {
             if myButtonWidth > pagerReference.menuItemMaxWidth {
                 myButtonWidth = pagerReference.menuItemMaxWidth
             }
-            let menuButtonY = (pagerReference.menuItemsAreCentered) ? (self.frame.height - pagerReference.menuItemHeight)/2 : 0
             menuButton.frame = CGRect(x: myOffset, y: menuButtonY, width: myButtonWidth, height: pagerReference.menuItemHeight)
             menuButton.tag = i
             menuButton.addTarget(self, action: #selector(MenuView.buttonPressed(sender:)), for: .touchUpInside)

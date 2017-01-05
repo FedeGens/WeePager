@@ -2,6 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "self:WeePager.xcodeproj">
+      location = "self:/Users/fedegens/Projects/Libraries/WeePager/WeePager.xcodeproj">
    </FileRef>
 </Workspace>

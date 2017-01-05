@@ -8,7 +8,7 @@
 
 import UIKit
 
-class WeePager: UIView {
+public class WeePager: UIView {
     
     private var menu: MenuView!
     private var body: BodyView!
@@ -49,7 +49,7 @@ class WeePager: UIView {
     @IBInspectable var indicatorAlign : indicatorAlignment = .bottom
     @IBInspectable var indicatorAlpha : CGFloat = 1.0
     
-    func set(viewControllers: [UIViewController], titles: [String]?, images: [UIImage]?) {
+    public func set(viewControllers: [UIViewController], titles: [String]?, images: [UIImage]?) {
         page = self.initialPageIndex
         
         var titleArray = [String]()
@@ -95,13 +95,13 @@ class WeePager: UIView {
         }
     }
     
-    override func layoutSubviews() {
+    override public func layoutSubviews() {
         body.delegate = nil
         super.layoutSubviews()
         body.updateLayout()
         body.delegate = body
     }
-
+    
     internal func didSetPage(index: Int) {
         page = index
         delegate?.pagerDidMoveToPage(index: page)
@@ -124,12 +124,12 @@ class WeePager: UIView {
     }
     
     
-    func setIndicatorImage(withName name: String) {
+    public func setIndicatorImage(withName name: String) {
         let myImage = UIImage(named: name)!
         setIndicatorImage(withImage: myImage)
     }
     
-    func setIndicatorImage(withImage image: UIImage) {
+    public func setIndicatorImage(withImage image: UIImage) {
         let myImageView = UIImageView(image: image)
         indicatorView = myImageView
         indicatorColor = .clear
