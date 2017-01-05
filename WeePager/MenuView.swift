@@ -34,7 +34,6 @@ class MenuView: UIScrollView {
         showsHorizontalScrollIndicator = false
         
         var myOffset: CGFloat = pagerReference.menuInset
-        let menuButtonY = (pagerReference.menuItemsAreCentered) ? (pagerReference.menuHeight - pagerReference.menuItemHeight)/2 : 0
 
         // Create and add buttons to menu
         for i in 0...titles.count-1 {
@@ -60,7 +59,7 @@ class MenuView: UIScrollView {
             if myButtonWidth > pagerReference.menuItemMaxWidth {
                 myButtonWidth = pagerReference.menuItemMaxWidth
             }
-            menuButton.frame = CGRect(x: myOffset, y: menuButtonY, width: myButtonWidth, height: pagerReference.menuItemHeight)
+            menuButton.frame = CGRect(x: myOffset, y: 0, width: myButtonWidth, height: pagerReference.menuHeight)
             menuButton.tag = i
             menuButton.addTarget(self, action: #selector(MenuView.buttonPressed(sender:)), for: .touchUpInside)
 
@@ -77,13 +76,13 @@ class MenuView: UIScrollView {
             
             myOffset = pagerReference.menuInset
             for elem in buttons {
-                elem.frame = CGRect(x: myOffset, y: 0, width: elem.frame.width+singleDiff, height: pagerReference.menuItemHeight)
+                elem.frame = CGRect(x: myOffset, y: 0, width: elem.frame.width+singleDiff, height: pagerReference.menuHeight)
                 myOffset += elem.frame.width
             }
             myOffset += pagerReference.menuInset
         }
         
-        contentSize = CGSize(width: myOffset, height: pagerReference.menuItemHeight)
+        contentSize = CGSize(width: myOffset, height: pagerReference.menuHeight)
         
         let indicatorY = (pagerReference.indicatorAlign == .top) ? 0 : (pagerReference.indicatorAlign == .bottom) ? self.frame.height-pagerReference.indicatorHeight : (self.frame.height-pagerReference.indicatorHeight) / 2
         let indicatorWidth = (pagerReference.indicatorWidthAnimated) ? buttons[0].frame.width : pagerReference.indicatorWidth

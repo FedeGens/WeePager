@@ -12,6 +12,7 @@ public class WeePager: UIView {
     
     private var menu: MenuView!
     private var body: BodyView!
+    private var separator: UIView = UIView()
     private var page: Int = 0
     var delegate: MyPagerDelegate?
     
@@ -20,12 +21,17 @@ public class WeePager: UIView {
     @IBInspectable var initialPageIndex : Int = 0
     @IBInspectable var animateMenuSelectionScroll : Bool = true
     
-    @IBInspectable var menuHeight : CGFloat = 30
+    @IBInspectable var menuHeight : CGFloat = 50
     @IBInspectable var menuPosition : menuPosition = .top
     @IBInspectable var menuBackgroundColor : UIColor = .white
-    @IBInspectable var menuInset : CGFloat = 0
+    @IBInspectable var menuInset : CGFloat = 32
     
-    @IBInspectable var menuItemHeight : CGFloat = 30
+    @IBInspectable var menuSeparatorHeight : CGFloat = 0
+    @IBInspectable var menuSeparatorColor : UIColor = .black
+    @IBInspectable var menuSeparatorInset : CGFloat = 0
+    @IBInspectable var menuSeparatorMarginTop : CGFloat = 0
+    @IBInspectable var menuSeparatorMarginBottom : CGFloat = 0
+    
     @IBInspectable var menuItemMaxLines : Int = 1
     @IBInspectable var menuItemMinWidth : CGFloat = 50
     @IBInspectable var menuItemMaxWidth : CGFloat = 150
@@ -64,15 +70,19 @@ public class WeePager: UIView {
         
         menu = MenuView(frame: CGRect(x: 0, y: (self.menuPosition == .top) ? 0 : self.frame.height-self.menuHeight, width:self.frame.width, height: self.menuHeight), titles: titleArray, images: images, pagerReference: self)
         body = BodyView(frame: CGRect(x: 0, y: (self.menuPosition == .top) ? self.menuHeight : 0, width:self.frame.width, height: self.frame.height-self.menuHeight), viewControllers: viewControllers, pagerReference: self)
+        separator.backgroundColor = menuSeparatorColor
+        
         menu.translatesAutoresizingMaskIntoConstraints = false
         body.translatesAutoresizingMaskIntoConstraints = false
-        
+        separator.translatesAutoresizingMaskIntoConstraints = false
+
         menu.bodyReference = body
         body.menuReference = menu
         menu.setSelected(index: self.initialPageIndex)
         
         self.addSubview(menu)
         self.addSubview(body)
+        self.addSubview(separator)
         
         setConstraints()
     }
@@ -83,16 +93,22 @@ public class WeePager: UIView {
         self.addConstraint(NSLayoutConstraint(item: menu, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: self.menuHeight))
         self.addConstraint(NSLayoutConstraint(item: body, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1.0, constant: 0))
         self.addConstraint(NSLayoutConstraint(item: body, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1.0, constant: 0))
+        self.addConstraint(NSLayoutConstraint(item: separator, attribute: .leading, relatedBy: .equal, toItem: menu, attribute: .leading, multiplier: 1.0, constant: self.menuSeparatorInset))
+        self.addConstraint(NSLayoutConstraint(item: separator, attribute: .trailing, relatedBy: .equal, toItem: menu, attribute: .trailing, multiplier: 1.0, constant: -self.menuSeparatorInset))
+        self.addConstraint(NSLayoutConstraint(item: separator, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: self.menuSeparatorHeight))
         
         if self.menuPosition == .top {
             self.addConstraint(NSLayoutConstraint(item: menu, attribute: .top, relatedBy: .equal, toItem: self, attribute: .top, multiplier: 1.0, constant: 0))
+            self.addConstraint(NSLayoutConstraint(item: menu, attribute: .bottom, relatedBy: .equal, toItem: separator, attribute: .top, multiplier: 1.0, constant: -menuSeparatorMarginTop))
+            self.addConstraint(NSLayoutConstraint(item: separator, attribute: .bottom, relatedBy: .equal, toItem: body, attribute: .top, multiplier: 1.0, constant: -menuSeparatorMarginBottom))
             self.addConstraint(NSLayoutConstraint(item: body, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1.0, constant: 0))
-            self.addConstraint(NSLayoutConstraint(item: menu, attribute: .bottom, relatedBy: .equal, toItem: body, attribute: .top, multiplier: 1.0, constant: 0))
         } else {
             self.addConstraint(NSLayoutConstraint(item: menu, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1.0, constant: 0))
+            self.addConstraint(NSLayoutConstraint(item: menu, attribute: .top, relatedBy: .equal, toItem: separator, attribute: .bottom, multiplier: 1.0, constant: menuSeparatorMarginBottom))
+            self.addConstraint(NSLayoutConstraint(item: separator, attribute: .top, relatedBy: .equal, toItem: body, attribute: .bottom, multiplier: 1.0, constant: menuSeparatorMarginTop))
             self.addConstraint(NSLayoutConstraint(item: body, attribute: .top, relatedBy: .equal, toItem: self, attribute: .top, multiplier: 1.0, constant: 0))
-            self.addConstraint(NSLayoutConstraint(item: menu, attribute: .top, relatedBy: .equal, toItem: body, attribute: .bottom, multiplier: 1.0, constant: 0))
         }
+        
     }
     
     override public func layoutSubviews() {
