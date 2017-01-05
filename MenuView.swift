@@ -1,0 +1,160 @@
+//
+//  MenuView.swift
+//  MyPager
+//
+//  Created by Federico Gentile on 02/01/17.
+//  Copyright © 2017 Federico Gentile. All rights reserved.
+//
+
+import UIKit
+
+@IBDesignable
+class MenuView: UIScrollView {
+    
+    private var buttons : [UIButton] = [UIButton]()
+    private var selectedElem : Int = 0
+    private var indicator: UIView!
+    var bodyReference: BodyView!
+    var pagerReference: WeePager!
+    
+    init(frame: CGRect, titles: [String], images: [UIImage]?, pagerReference: WeePager) {
+        super.init(frame: frame)
+        
+        self.pagerReference = pagerReference
+        self.backgroundColor = pagerReference.menuBackgroundColor
+        setMenu(titles: titles, images: images)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+    
+    private func setMenu(titles:[String], images: [UIImage]?) {
+        showsVerticalScrollIndicator = false
+        showsHorizontalScrollIndicator = false
+        
+        var myOffset: CGFloat = pagerReference.menuInset
+        
+        // Create and add buttons to menu
+        for i in 0...titles.count-1 {
+            let menuButton = UIButton()
+            
+            if images != nil {
+                menuButton.imageView?.contentMode = .scaleAspectFit
+                menuButton.imageView?.tintColor = pagerReference.menuItemColor
+                menuButton.setImage(images![i].withRenderingMode(.alwaysTemplate), for: .normal)
+            } else {
+                menuButton.setTitle(titles[i], for: .normal)
+                menuButton.titleLabel?.font = UIFont.systemFont(ofSize: pagerReference.menuItemFontSize)
+                menuButton.titleLabel?.lineBreakMode = .byTruncatingTail
+                menuButton.titleLabel?.textAlignment = .center
+                menuButton.titleLabel?.numberOfLines = pagerReference.menuItemMaxLines
+                menuButton.setTitleColor(pagerReference.menuItemColor, for: .normal)
+            }
+            
+            var myButtonWidth = menuButton.intrinsicContentSize.width + pagerReference.menuItemInset
+            if myButtonWidth < pagerReference.menuItemMinWidth {
+                myButtonWidth = pagerReference.menuItemMinWidth
+            }
+            if myButtonWidth > pagerReference.menuItemMaxWidth {
+                myButtonWidth = pagerReference.menuItemMaxWidth
+            }
+            let menuButtonY = (pagerReference.menuItemsAreCentered) ? (self.frame.height - pagerReference.menuItemHeight)/2 : 0
+            menuButton.frame = CGRect(x: myOffset, y: menuButtonY, width: myButtonWidth, height: pagerReference.menuItemHeight)
+            menuButton.tag = i
+            menuButton.addTarget(self, action: #selector(MenuView.buttonPressed(sender:)), for: .touchUpInside)
+
+            buttons.append(menuButton)
+            self.addSubview(menuButton)
+            myOffset += menuButton.frame.width
+        }
+        myOffset += pagerReference.menuInset
+        
+        //Fill offset
+        if myOffset < self.frame.width {
+            let diff = self.frame.width - myOffset
+            let singleDiff = diff/CGFloat(buttons.count)
+            
+            myOffset = pagerReference.menuInset
+            for elem in buttons {
+                elem.frame = CGRect(x: myOffset, y: 0, width: elem.frame.width+singleDiff, height: pagerReference.menuItemHeight)
+                myOffset += elem.frame.width
+            }
+            myOffset += pagerReference.menuInset
+        }
+        
+        contentSize = CGSize(width: myOffset, height: pagerReference.menuItemHeight)
+        
+        let indicatorY = (pagerReference.indicatorAlign == .top) ? 0 : (pagerReference.indicatorAlign == .bottom) ? self.frame.height-pagerReference.indicatorHeight : (self.frame.height-pagerReference.indicatorHeight) / 2
+        let indicatorWidth = (pagerReference.indicatorWidthAnimated) ? buttons[0].frame.width : pagerReference.indicatorWidth
+        indicator = pagerReference.indicatorView
+        indicator.frame = CGRect(x: pagerReference.menuInset, y: indicatorY, width: indicatorWidth, height: pagerReference.indicatorHeight)
+        indicator.layer.cornerRadius = pagerReference.indicatorCornerRadius
+        indicator.backgroundColor = pagerReference.indicatorColor
+        indicator.alpha = pagerReference.indicatorAlpha
+        self.addSubview(indicator)
+    }
+    
+    @objc private func buttonPressed(sender: UIButton) {
+        bodyReference.moveToPage(index: sender.tag, animated: pagerReference.animateMenuSelectionScroll)
+        if !pagerReference.animateMenuSelectionScroll {
+            moveIndicator(offsetX: Double(self.frame.width)*Double(sender.tag))
+        }
+    }
+    
+    func moveIndicator(offsetX: Double) {
+        let (position,width) = getIndicatorAbsolutePosition(offsetX: offsetX)
+        
+        indicator.frame.origin.x = position
+        indicator.frame.size = CGSize(width: width, height: indicator.frame.height)
+        checkMenuScroll()
+    }
+    
+    private func getIndicatorAbsolutePosition(offsetX: Double) -> (CGFloat, CGFloat) {
+        var position : CGFloat = 0
+        var width : CGFloat = 0
+        let startingIndex = Int(offsetX/Double(self.frame.width))
+        let internalOffsetPercentage = offsetX.truncatingRemainder(dividingBy: Double(self.frame.width)) / Double(self.frame.width)
+        let internalIndicatorOffsset = Double(getButtonDistance(index: startingIndex)) * internalOffsetPercentage
+        
+        let widthOffset = (startingIndex+1 < buttons.count) ? buttons[startingIndex+1].frame.width - buttons[startingIndex].frame.width : 0
+        let internalWidthOffset = widthOffset * CGFloat(internalOffsetPercentage)
+        
+        position = getButtonPosition(index: startingIndex) + CGFloat(internalIndicatorOffsset) - indicator.frame.width/2
+        width = (pagerReference.indicatorWidthAnimated) ? buttons[startingIndex].frame.width + internalWidthOffset : indicator.frame.size.width
+        
+        return (position, width)
+    }
+    
+    private func getButtonPosition(index: Int) -> CGFloat {
+        let position = buttons[index].frame.origin.x + buttons[index].frame.width/2
+        return position
+    }
+    
+    private func getButtonDistance(index: Int) -> CGFloat {
+        let distance = (index+1 < buttons.count) ? getButtonPosition(index: index+1) - getButtonPosition(index: index) : buttons[index].frame.width
+        return distance
+    }
+    
+    private func checkMenuScroll() {
+        var newX = indicator.frame.origin.x - (frame.width - indicator.frame.width)/2
+        newX = (newX < 0) ? 0 : (newX > self.contentSize.width - self.frame.width) ? self.contentSize.width - self.frame.width : newX
+        self.setContentOffset(CGPoint(x: newX, y: 0), animated: false)
+    }
+    
+    func setSelected(index: Int) {
+        if pagerReference.menuItemBoldSelected {
+            buttons[selectedElem].titleLabel?.font = UIFont.systemFont(ofSize: pagerReference.menuItemFontSize)
+            buttons[index].titleLabel?.font = UIFont.boldSystemFont(ofSize: pagerReference.menuItemFontSize)
+        }
+        
+        if pagerReference.menuItemCanColorItem {
+            buttons[selectedElem].setTitleColor(pagerReference.menuItemColor, for: .normal)
+            buttons[selectedElem].imageView?.tintColor = pagerReference.menuItemColor
+            buttons[index].setTitleColor(pagerReference.menuItemSelectedColor, for: .normal)
+            buttons[index].imageView?.tintColor = pagerReference.menuItemSelectedColor
+        }
+        selectedElem = index
+        bodyReference.checkCreatedPages(index: index)
+    }
+}
