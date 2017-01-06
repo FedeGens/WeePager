@@ -41,23 +41,23 @@ class MenuView: UIScrollView {
             
             if images != nil {
                 menuButton.imageView?.contentMode = .scaleAspectFit
-                menuButton.imageView?.tintColor = pagerReference.menuItemColor
+                menuButton.imageView?.tintColor = pagerReference.itemColor
                 menuButton.setImage(images![i].withRenderingMode(.alwaysTemplate), for: .normal)
             } else {
                 menuButton.setTitle(titles[i], for: .normal)
-                menuButton.titleLabel?.font = UIFont.systemFont(ofSize: pagerReference.menuItemFontSize)
+                menuButton.titleLabel?.font = UIFont.systemFont(ofSize: pagerReference.itemFontSize)
                 menuButton.titleLabel?.lineBreakMode = .byTruncatingTail
                 menuButton.titleLabel?.textAlignment = .center
-                menuButton.titleLabel?.numberOfLines = pagerReference.menuItemMaxLines
-                menuButton.setTitleColor(pagerReference.menuItemColor, for: .normal)
+                menuButton.titleLabel?.numberOfLines = pagerReference.itemMaxLines
+                menuButton.setTitleColor(pagerReference.itemColor, for: .normal)
             }
             
-            var myButtonWidth = menuButton.intrinsicContentSize.width + pagerReference.menuItemInset
-            if myButtonWidth < pagerReference.menuItemMinWidth {
-                myButtonWidth = pagerReference.menuItemMinWidth
+            var myButtonWidth = menuButton.intrinsicContentSize.width + pagerReference.itemInset
+            if myButtonWidth < pagerReference.itemMinWidth {
+                myButtonWidth = pagerReference.itemMinWidth
             }
-            if myButtonWidth > pagerReference.menuItemMaxWidth {
-                myButtonWidth = pagerReference.menuItemMaxWidth
+            if myButtonWidth > pagerReference.itemMaxWidth {
+                myButtonWidth = pagerReference.itemMaxWidth
             }
             menuButton.frame = CGRect(x: myOffset, y: 0, width: myButtonWidth, height: pagerReference.menuHeight)
             menuButton.tag = i
@@ -142,16 +142,16 @@ class MenuView: UIScrollView {
     }
     
     func setSelected(index: Int) {
-        if pagerReference.menuItemBoldSelected {
-            buttons[selectedElem].titleLabel?.font = UIFont.systemFont(ofSize: pagerReference.menuItemFontSize)
-            buttons[index].titleLabel?.font = UIFont.boldSystemFont(ofSize: pagerReference.menuItemFontSize)
+        if pagerReference.itemBoldSelected {
+            buttons[selectedElem].titleLabel?.font = UIFont.systemFont(ofSize: pagerReference.itemFontSize)
+            buttons[index].titleLabel?.font = UIFont.boldSystemFont(ofSize: pagerReference.itemFontSize)
         }
         
-        if pagerReference.menuItemCanColorItem {
-            buttons[selectedElem].setTitleColor(pagerReference.menuItemColor, for: .normal)
-            buttons[selectedElem].imageView?.tintColor = pagerReference.menuItemColor
-            buttons[index].setTitleColor(pagerReference.menuItemSelectedColor, for: .normal)
-            buttons[index].imageView?.tintColor = pagerReference.menuItemSelectedColor
+        if pagerReference.itemCanColor {
+            buttons[selectedElem].setTitleColor(pagerReference.itemColor, for: .normal)
+            buttons[selectedElem].imageView?.tintColor = pagerReference.itemColor
+            buttons[index].setTitleColor(pagerReference.itemSelectedColor, for: .normal)
+            buttons[index].imageView?.tintColor = pagerReference.itemSelectedColor
         }
         selectedElem = index
         bodyReference.checkCreatedPages(index: index)

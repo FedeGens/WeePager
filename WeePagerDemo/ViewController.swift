@@ -34,9 +34,15 @@ class ViewController: UIViewController, MyPagerDelegate {
             vcTitle += "a"
         }
         //let imgArr = [UIImage].init(repeating: UIImage(named: "icon")!, count: vcArr.count)
+        weePager_.indicatorHeight = 30
+        weePager_.indicatorAlpha = 0.3
+        weePager_.indicatorAlign = .middle
+        weePager_.separatorHeight = 1
+        weePager_.separatorColor = .lightGray
+        weePager_.separatorInset = 16
+        
         weePager_.set(viewControllers: vcArr, titles: nil, images: nil)
         weePager_.delegate = self
-        self.view.addSubview(weePager_)
         
     }
 
