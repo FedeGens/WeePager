@@ -1,6 +1,6 @@
 # WeePager
 
-A simple, funny and fully customizable pager for iOS. Wee!
+WeePager is a simple, funny and fully customizable pager for iOS. Wee!
 
 
 ## Installation
