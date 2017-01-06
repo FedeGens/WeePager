@@ -4,17 +4,12 @@ WeePager is a simple, funny and fully customizable pager for iOS. Wee!
 
 
 ## Installation
-At the moment the library is in my personal pod repo.
-Add this to your Podfile
-```ruby
-source 'https://github.com/FedeGens/FedeGensPodSpecs.git'
-```
-And add this too.
+Using Cocoapods:
 ```ruby
 use_frameworks!
 pod 'WeePager'
 ```
-Alternatively you can just import the classes from this repo
+Alternatively you can just import the classes from "WeePager" folder.
 
 ##Requirements
 - iOS 8.0+ 
