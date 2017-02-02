@@ -27,7 +27,7 @@ class ViewController: UIViewController, MyPagerDelegate {
         
         var vcArr = [UIViewController]()
         var vcTitle = "a"
-        for i in 0...20 {
+        for i in 0...3 {
             let vc = self.storyboard?.instantiateViewController(withIdentifier: "prova") as! ProvaViewController
             vc.title = "pagina" + String(i)
             vcArr.append(vc)
@@ -36,14 +36,19 @@ class ViewController: UIViewController, MyPagerDelegate {
         //let imgArr = [UIImage].init(repeating: UIImage(named: "icon")!, count: vcArr.count)
         weePager_.indicatorHeight = 30
         weePager_.indicatorAlpha = 0.3
+        weePager_.indicatorWidth = 60
+        weePager_.indicatorCornerRadius = 6
+        weePager_.indicatorWidthAnimated = false
+        weePager_.itemBoldSelected = false
+        
         weePager_.indicatorAlign = .middle
-        weePager_.separatorHeight = 1
-        weePager_.separatorColor = .lightGray
-        weePager_.separatorInset = 16
+        weePager_.menuPosition = .top
+        weePager_.animateMenuSelectionScroll = false
+        weePager_.itemSelectedColor = .red
+        weePager_.menuInset = 0
         
         weePager_.set(viewControllers: vcArr, titles: nil, images: nil)
         weePager_.delegate = self
-        
     }
 
     func pagerDidMoveToPage(index: Int) {

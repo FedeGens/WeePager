@@ -70,7 +70,7 @@ public class WeePager: UIView {
         menu.translatesAutoresizingMaskIntoConstraints = false
         body.translatesAutoresizingMaskIntoConstraints = false
         separator.translatesAutoresizingMaskIntoConstraints = false
-
+        
         menu.bodyReference = body
         body.menuReference = menu
         menu.setSelected(index: page)
@@ -158,7 +158,7 @@ enum menuPosition : String {
     case bottom = "bottom"
 }
 
-internal protocol MyPagerDelegate {
+public protocol MyPagerDelegate {
     func pagerDidMoveToPage(index: Int)
     func pagerIsMovingToPage(index: Int)
 }
