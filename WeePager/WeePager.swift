@@ -14,7 +14,7 @@ public class WeePager: UIView {
     private var body: BodyView!
     private var separator: UIView = UIView()
     private var page: Int = 0
-    var delegate: MyPagerDelegate?
+    public var delegate: MyPagerDelegate?
     
     @IBInspectable var loadAllPages : Bool = true
     @IBInspectable var pagesOffLimit : Int = 5
