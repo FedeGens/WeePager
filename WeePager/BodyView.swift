@@ -22,6 +22,7 @@ class BodyView: UIScrollView, UIScrollViewDelegate {
         self.pagerReference = pagerReference
         self.isPagingEnabled = true
         self.showsHorizontalScrollIndicator = false
+        self.clipsToBounds = false
         delegate = self
         
         self.viewControllers = viewControllers
@@ -59,6 +60,7 @@ class BodyView: UIScrollView, UIScrollViewDelegate {
     internal func scrollViewDidScroll(_ scrollView: UIScrollView) {
         pagerReference.isSettingPage(index: (self.currentHalfPage < viewControllers.count) ? self.currentHalfPage : viewControllers.count-1)
         menuReference.moveIndicator(offsetX: Double(scrollView.contentOffset.x))
+        pagerReference.delegate?.percentageScrolled(percentage: Double(scrollView.contentOffset.x / (CGFloat(viewControllers.count-1) * self.frame.width)))
     }
     
     internal func moveToPage(index: Int, animated: Bool) {

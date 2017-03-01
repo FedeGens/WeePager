@@ -161,4 +161,5 @@ enum menuPosition : String {
 public protocol MyPagerDelegate {
     func pagerDidMoveToPage(index: Int)
     func pagerIsMovingToPage(index: Int)
+    func percentageScrolled(percentage: Double)
 }

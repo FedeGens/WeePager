@@ -34,7 +34,7 @@ class MenuView: UIScrollView {
         showsHorizontalScrollIndicator = false
         
         var myOffset: CGFloat = pagerReference.menuInset
-
+        
         // Create and add buttons to menu
         for i in 0...titles.count-1 {
             let menuButton = UIButton()
@@ -62,7 +62,7 @@ class MenuView: UIScrollView {
             menuButton.frame = CGRect(x: myOffset, y: 0, width: myButtonWidth, height: pagerReference.menuHeight)
             menuButton.tag = i
             menuButton.addTarget(self, action: #selector(MenuView.buttonPressed(sender:)), for: .touchUpInside)
-
+            
             buttons.append(menuButton)
             self.addSubview(menuButton)
             myOffset += menuButton.frame.width
