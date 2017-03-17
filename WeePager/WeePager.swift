@@ -15,6 +15,7 @@ public class WeePager: UIView {
     private var separator: UIView = UIView()
     private var page: Int = 0
     public var delegate: MyPagerDelegate?
+    public var isLoaded: Bool = false
     
     @IBInspectable var loadAllPages : Bool = true
     @IBInspectable var pagesOffLimit : Int = 5
@@ -63,6 +64,12 @@ public class WeePager: UIView {
             titleArray = titles!
         }
         
+        if menu != nil {
+            menu.removeFromSuperview()
+            body.removeFromSuperview()
+            separator.removeFromSuperview()
+        }
+        
         menu = MenuView(frame: CGRect(x: 0, y: (self.menuPosition == .top) ? 0 : self.frame.height-self.menuHeight, width:self.frame.width, height: self.menuHeight), titles: titleArray, images: images, pagerReference: self)
         body = BodyView(frame: CGRect(x: 0, y: (self.menuPosition == .top) ? self.menuHeight : 0, width:self.frame.width, height: self.frame.height-self.menuHeight), viewControllers: viewControllers, pagerReference: self)
         separator.backgroundColor = separatorColor
@@ -80,6 +87,7 @@ public class WeePager: UIView {
         self.addSubview(separator)
         
         setConstraints()
+        isLoaded = true
     }
     
     private func setConstraints() {
