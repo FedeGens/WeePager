@@ -70,9 +70,7 @@ class BodyView: UIScrollView, UIScrollViewDelegate {
     
     private func createPageFromController(index: Int) {
         if index >= 0 && index < self.viewControllers.count && !self.viewControllers[index].view.isDescendant(of: self) {
-            DispatchQueue.main.async {
-                self.addSubview(self.viewControllers[index].view)
-            }
+            self.addSubview(self.viewControllers[index].view)
         }
     }
     
@@ -80,7 +78,7 @@ class BodyView: UIScrollView, UIScrollViewDelegate {
         guard !pagerReference.loadAllPages else{
             return
         }
-        DispatchQueue.global().async {
+        DispatchQueue.main.async {
             for i in index-self.pagerReference.pagesOffLimit...index+self.pagerReference.pagesOffLimit {
                 self.createPageFromController(index: i)
             }

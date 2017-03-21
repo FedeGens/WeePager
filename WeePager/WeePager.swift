@@ -17,41 +17,42 @@ public class WeePager: UIView {
     public var delegate: MyPagerDelegate?
     public var isLoaded: Bool = false
     
-    @IBInspectable var loadAllPages : Bool = true
-    @IBInspectable var pagesOffLimit : Int = 5
-    @IBInspectable var initialPage : Int = 0
-    @IBInspectable var animateMenuSelectionScroll : Bool = true
+    @IBInspectable public var loadAllPages : Bool = true
+    @IBInspectable public var pagesOffLimit : Int = 5
+    @IBInspectable public var initialPage : Int = 0
+    @IBInspectable public var animateMenuSelectionScroll : Bool = true
     
-    @IBInspectable var menuHeight : CGFloat = 50
-    @IBInspectable var menuPosition : menuPosition = .top
-    @IBInspectable var menuBackgroundColor : UIColor = .white
-    @IBInspectable var menuInset : CGFloat = 32
+    @IBInspectable public var menuHeight : CGFloat = 50
+    @IBInspectable public var menuPosition : menuPosition = .top
+    @IBInspectable public var menuBackgroundColor : UIColor = .white
+    @IBInspectable public var menuInset : CGFloat = 32
     
-    @IBInspectable var separatorHeight : CGFloat = 0
-    @IBInspectable var separatorColor : UIColor = .black
-    @IBInspectable var separatorInset : CGFloat = 0
-    @IBInspectable var separatorMarginTop : CGFloat = 0
-    @IBInspectable var separatorMarginBottom : CGFloat = 0
+    @IBInspectable public var separatorHeight : CGFloat = 0
+    @IBInspectable public var separatorColor : UIColor = .black
+    @IBInspectable public var separatorInset : CGFloat = 0
+    @IBInspectable public var separatorMarginTop : CGFloat = 0
+    @IBInspectable public var separatorMarginBottom : CGFloat = 0
     
-    @IBInspectable var itemMaxLines : Int = 1
-    @IBInspectable var itemMinWidth : CGFloat = 50
-    @IBInspectable var itemMaxWidth : CGFloat = 150
-    @IBInspectable var itemInset : CGFloat = 16
+    @IBInspectable public var itemMaxLines : Int = 1
+    @IBInspectable public var itemMinWidth : CGFloat = 50
+    @IBInspectable public var itemMaxWidth : CGFloat = 150
+    @IBInspectable public var itemInset : CGFloat = 16
     
-    @IBInspectable var itemBoldSelected : Bool = true
-    @IBInspectable var itemCanColor : Bool = true
-    @IBInspectable var itemColor : UIColor = .gray
-    @IBInspectable var itemSelectedColor : UIColor = .black
-    @IBInspectable var itemFontSize : CGFloat = 17
+    @IBInspectable public var itemBoldSelected : Bool = true
+    @IBInspectable public var itemCanColor : Bool = true
+    @IBInspectable public var itemColor : UIColor = .gray
+    @IBInspectable public var itemSelectedColor : UIColor = .black
+    @IBInspectable public var itemFont : UIFont = UIFont.systemFont(ofSize: 17)
+    @IBInspectable public var itemBoldFont : UIFont = UIFont.boldSystemFont(ofSize: 17)
     
-    @IBInspectable var indicatorView : UIView = UIView()
-    @IBInspectable var indicatorColor : UIColor = .black
-    @IBInspectable var indicatorWidthAnimated : Bool = true
-    @IBInspectable var indicatorWidth : CGFloat = 50
-    @IBInspectable var indicatorHeight : CGFloat = 3
-    @IBInspectable var indicatorCornerRadius : CGFloat = 2
-    @IBInspectable var indicatorAlign : indicatorAlignment = .bottom
-    @IBInspectable var indicatorAlpha : CGFloat = 1.0
+    @IBInspectable public var indicatorView : UIView = UIView()
+    @IBInspectable public var indicatorColor : UIColor = .black
+    @IBInspectable public var indicatorWidthAnimated : Bool = true
+    @IBInspectable public var indicatorWidth : CGFloat = 50
+    @IBInspectable public var indicatorHeight : CGFloat = 3
+    @IBInspectable public var indicatorCornerRadius : CGFloat = 2
+    @IBInspectable public var indicatorAlign : indicatorAlignment = .bottom
+    @IBInspectable public var indicatorAlpha : CGFloat = 1.0
     
     public func set(viewControllers: [UIViewController], titles: [String]?, images: [UIImage]?) {
         var titleArray = [String]()
@@ -115,6 +116,9 @@ public class WeePager: UIView {
     }
     
     override public func layoutSubviews() {
+        guard body != nil else {
+            return
+        }
         body.delegate = nil
         super.layoutSubviews()
         body.updateLayout()
@@ -155,13 +159,13 @@ public class WeePager: UIView {
     }
 }
 
-enum indicatorAlignment : String {
+public enum indicatorAlignment : String {
     case top = "top"
     case middle = "middle"
     case bottom = "bottom"
 }
 
-enum menuPosition : String {
+public enum menuPosition : String {
     case top = "top"
     case bottom = "bottom"
 }

@@ -45,7 +45,7 @@ class MenuView: UIScrollView {
                 menuButton.setImage(images![i].withRenderingMode(.alwaysTemplate), for: .normal)
             } else {
                 menuButton.setTitle(titles[i], for: .normal)
-                menuButton.titleLabel?.font = UIFont.systemFont(ofSize: pagerReference.itemFontSize)
+                menuButton.titleLabel?.font = pagerReference.itemFont
                 menuButton.titleLabel?.lineBreakMode = .byTruncatingTail
                 menuButton.titleLabel?.textAlignment = .center
                 menuButton.titleLabel?.numberOfLines = pagerReference.itemMaxLines
@@ -143,8 +143,8 @@ class MenuView: UIScrollView {
     
     func setSelected(index: Int) {
         if pagerReference.itemBoldSelected {
-            buttons[selectedElem].titleLabel?.font = UIFont.systemFont(ofSize: pagerReference.itemFontSize)
-            buttons[index].titleLabel?.font = UIFont.boldSystemFont(ofSize: pagerReference.itemFontSize)
+            buttons[selectedElem].titleLabel?.font = pagerReference.itemFont
+            buttons[index].titleLabel?.font = pagerReference.itemBoldFont
         }
         
         if pagerReference.itemCanColor {
