@@ -54,6 +54,8 @@ public class WeePager: UIView {
     @IBInspectable public var indicatorAlign : indicatorAlignment = .bottom
     @IBInspectable public var indicatorAlpha : CGFloat = 1.0
     
+    @IBInspectable public var bodyScrollable : Bool = true
+    
     public func set(viewControllers: [UIViewController], titles: [String]?, images: [UIImage]?) {
         var titleArray = [String]()
         if titles == nil || titles?.count != viewControllers.count {

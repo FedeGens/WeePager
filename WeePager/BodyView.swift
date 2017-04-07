@@ -23,6 +23,7 @@ class BodyView: UIScrollView, UIScrollViewDelegate {
         self.isPagingEnabled = true
         self.showsHorizontalScrollIndicator = false
         self.clipsToBounds = false
+        self.isScrollEnabled = pagerReference.bodyScrollable
         delegate = self
         
         self.viewControllers = viewControllers
