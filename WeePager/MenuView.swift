@@ -141,7 +141,7 @@ class MenuView: UIScrollView {
         self.setContentOffset(CGPoint(x: newX, y: 0), animated: false)
     }
     
-    func setSelected(index: Int) {
+    internal func setSelected(index: Int) {
         if pagerReference.itemBoldSelected {
             buttons[selectedElem].titleLabel?.font = pagerReference.itemFont
             buttons[index].titleLabel?.font = pagerReference.itemBoldFont
@@ -155,5 +155,9 @@ class MenuView: UIScrollView {
         }
         selectedElem = index
         bodyReference.checkCreatedPages(index: index)
+    }
+    
+    internal func setMenuElement(title: String, index: Int) {
+        buttons[index].setTitle(title, for: .normal)
     }
 }

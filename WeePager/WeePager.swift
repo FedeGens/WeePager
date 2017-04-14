@@ -159,6 +159,10 @@ public class WeePager: UIView {
         indicatorView = myImageView
         indicatorColor = .clear
     }
+    
+    public func setMenuElementTitle(forIndex index: Int, title: String) {
+        menu.setMenuElement(title: title, index: index)
+    }
 }
 
 public enum indicatorAlignment : String {
