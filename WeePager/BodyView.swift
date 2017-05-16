@@ -22,7 +22,7 @@ class BodyView: UIScrollView, UIScrollViewDelegate {
         self.pagerReference = pagerReference
         self.isPagingEnabled = true
         self.showsHorizontalScrollIndicator = false
-        self.clipsToBounds = false
+        self.clipsToBounds = pagerReference.clipsToBounds
         self.isScrollEnabled = pagerReference.bodyScrollable
         delegate = self
         
