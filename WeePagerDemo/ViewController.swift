@@ -9,6 +9,10 @@
 import UIKit
 
 class ViewController: UIViewController, MyPagerDelegate {
+    func percentageScrolled(percentage: Double) {
+        
+    }
+
 
     @IBOutlet weak var weePager_: WeePager!
     
@@ -40,6 +44,7 @@ class ViewController: UIViewController, MyPagerDelegate {
         weePager_.indicatorCornerRadius = 6
         weePager_.indicatorWidthAnimated = false
         weePager_.itemBoldSelected = false
+        weePager_.menuShadowEnabled = true
         
         weePager_.indicatorAlign = .middle
         weePager_.menuPosition = .top

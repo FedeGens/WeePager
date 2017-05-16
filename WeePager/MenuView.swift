@@ -92,6 +92,11 @@ class MenuView: UIScrollView {
         indicator.backgroundColor = pagerReference.indicatorColor
         indicator.alpha = pagerReference.indicatorAlpha
         self.addSubview(indicator)
+        
+        //Shadow
+        if pagerReference.menuShadowEnabled {
+            setShadow()
+        }
     }
     
     @objc private func buttonPressed(sender: UIButton) {
@@ -159,5 +164,15 @@ class MenuView: UIScrollView {
     
     internal func setMenuElement(title: String, index: Int) {
         buttons[index].setTitle(title, for: .normal)
+    }
+    
+    //MARK: Shadow
+    func setShadow() {
+        self.layer.masksToBounds = false
+        self.layer.shouldRasterize = false
+        self.layer.shadowOpacity = 0.4
+        self.layer.shadowRadius = 1.5
+        self.layer.shadowColor = UIColor.black.cgColor
+        self.layer.shadowOffset = CGSize(width: 0, height: 2.5)
     }
 }

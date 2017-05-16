@@ -26,6 +26,7 @@ public class WeePager: UIView {
     @IBInspectable public var menuPosition : menuPosition = .top
     @IBInspectable public var menuBackgroundColor : UIColor = .white
     @IBInspectable public var menuInset : CGFloat = 32
+    @IBInspectable public var menuShadowEnabled : Bool = false
     
     @IBInspectable public var separatorHeight : CGFloat = 0
     @IBInspectable public var separatorColor : UIColor = .black
@@ -85,8 +86,8 @@ public class WeePager: UIView {
         body.menuReference = menu
         menu.setSelected(index: page)
         
-        self.addSubview(menu)
         self.addSubview(body)
+        self.addSubview(menu)
         self.addSubview(separator)
         
         setConstraints()
