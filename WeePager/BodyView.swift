@@ -12,7 +12,7 @@ import UIKit
 class BodyView: UIScrollView, UIScrollViewDelegate {
     
     private var initialPosition : Double!
-    private var viewControllers : [UIViewController] = [UIViewController]()
+    var viewControllers : [UIViewController] = [UIViewController]()
     var menuReference: MenuView!
     var pagerReference: WeePager!
     

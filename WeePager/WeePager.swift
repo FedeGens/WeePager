@@ -164,6 +164,12 @@ public class WeePager: UIView {
     public func setMenuElementTitle(forIndex index: Int, title: String) {
         menu.setMenuElement(title: title, index: index)
     }
+    
+    public func reloadData() {
+        for vc in body.viewControllers {
+            vc.viewDidLoad()
+        }
+    }
 }
 
 public enum indicatorAlignment : String {
