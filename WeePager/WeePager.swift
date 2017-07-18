@@ -183,12 +183,12 @@ public class WeePager: UIView {
     }
     
     public func prepareToAnimate(show: Bool) {
+        isAnimating = true
         menuLeftConst.constant = (show) ? self.frame.width : 0
         bodyTopConst.constant = (show) ? -self.frame.height : 0
     }
     
     public func animate(show: Bool, time: Double) {
-        isAnimating = true
         menuLeftConst.constant = (show) ? 0 : self.frame.width
         bodyTopConst.constant = (show) ? 0 : -self.frame.height
         UIView.animate(withDuration: time, animations: {
