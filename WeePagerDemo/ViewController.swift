@@ -56,6 +56,10 @@ class ViewController: UIViewController, MyPagerDelegate {
         weePager_.delegate = self
     }
 
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        weePager_.animate(show: true, time: 0.8)
+    }
     func pagerDidMoveToPage(index: Int) {
         print("moved: ", index)
     }

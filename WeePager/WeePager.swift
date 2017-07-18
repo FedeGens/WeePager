@@ -17,6 +17,11 @@ public class WeePager: UIView {
     public var delegate: MyPagerDelegate?
     public var isLoaded: Bool = false
     
+    private var menuLeftConst: NSLayoutConstraint!
+    private var bodyTopConst: NSLayoutConstraint!
+    
+    private var isAnimating = false
+    
     @IBInspectable public var loadAllPages : Bool = true
     @IBInspectable public var pagesOffLimit : Int = 5
     @IBInspectable public var initialPage : Int = 0
@@ -95,8 +100,11 @@ public class WeePager: UIView {
     }
     
     private func setConstraints() {
-        self.addConstraint(NSLayoutConstraint(item: menu, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1.0, constant: 0))
-        self.addConstraint(NSLayoutConstraint(item: menu, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1.0, constant: 0))
+        menuLeftConst = NSLayoutConstraint(item: menu, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1.0, constant: 0)
+        self.addConstraint(menuLeftConst)
+        let rightConst = NSLayoutConstraint(item: menu, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1.0, constant: 0)
+        rightConst.priority = 750
+        self.addConstraint(rightConst)
         self.addConstraint(NSLayoutConstraint(item: menu, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: self.menuHeight))
         self.addConstraint(NSLayoutConstraint(item: body, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1.0, constant: 0))
         self.addConstraint(NSLayoutConstraint(item: body, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1.0, constant: 0))
@@ -107,8 +115,11 @@ public class WeePager: UIView {
         if self.menuPosition == .top {
             self.addConstraint(NSLayoutConstraint(item: menu, attribute: .top, relatedBy: .equal, toItem: self, attribute: .top, multiplier: 1.0, constant: 0))
             self.addConstraint(NSLayoutConstraint(item: menu, attribute: .bottom, relatedBy: .equal, toItem: separator, attribute: .top, multiplier: 1.0, constant: -separatorMarginTop))
-            self.addConstraint(NSLayoutConstraint(item: separator, attribute: .bottom, relatedBy: .equal, toItem: body, attribute: .top, multiplier: 1.0, constant: -separatorMarginBottom))
-            self.addConstraint(NSLayoutConstraint(item: body, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1.0, constant: 0))
+            bodyTopConst = NSLayoutConstraint(item: separator, attribute: .bottom, relatedBy: .equal, toItem: body, attribute: .top, multiplier: 1.0, constant: -separatorMarginBottom)
+            self.addConstraint(bodyTopConst)
+            let bodyBotConst = NSLayoutConstraint(item: body, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1.0, constant: 0)
+            bodyBotConst.priority = 750
+            self.addConstraint(bodyBotConst)
         } else {
             self.addConstraint(NSLayoutConstraint(item: menu, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1.0, constant: 0))
             self.addConstraint(NSLayoutConstraint(item: menu, attribute: .top, relatedBy: .equal, toItem: separator, attribute: .bottom, multiplier: 1.0, constant: separatorMarginBottom))
@@ -119,7 +130,7 @@ public class WeePager: UIView {
     }
     
     override public func layoutSubviews() {
-        guard body != nil else {
+        guard body != nil && !isAnimating else {
             return
         }
         body.delegate = nil
@@ -169,6 +180,21 @@ public class WeePager: UIView {
         for vc in body.viewControllers {
             vc.viewDidLoad()
         }
+    }
+    
+    public func animate(show: Bool, time: Double) {
+        isAnimating = true
+        menuLeftConst.constant = (show) ? self.frame.width : 0
+        bodyTopConst.constant = (show) ? -self.frame.height : 0
+        self.layoutIfNeeded()
+        
+        menuLeftConst.constant = (show) ? 0 : self.frame.width
+        bodyTopConst.constant = (show) ? 0 : -self.frame.height
+        UIView.animate(withDuration: time, animations: {
+            self.layoutIfNeeded()
+        }, completion:{_ in
+            self.isAnimating = false
+        })
     }
 }
 
