@@ -117,6 +117,9 @@ class MenuView: UIScrollView {
     private func getIndicatorAbsolutePosition(offsetX: Double) -> (CGFloat, CGFloat) {
         var position : CGFloat = 0
         var width : CGFloat = 0
+        guard self.frame.width != 0 else {
+            return (indicator.frame.origin.x, indicator.frame.size.width)
+        }
         let startingIndex = Int(offsetX/Double(self.frame.width))
         let internalOffsetPercentage = offsetX.truncatingRemainder(dividingBy: Double(self.frame.width)) / Double(self.frame.width)
         let internalIndicatorOffsset = Double(getButtonDistance(index: startingIndex)) * internalOffsetPercentage

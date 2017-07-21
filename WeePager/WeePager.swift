@@ -19,9 +19,7 @@ public class WeePager: UIView {
     
     private var menuLeftConst: NSLayoutConstraint!
     private var bodyTopConst: NSLayoutConstraint!
-    
-    private var isAnimating = false
-    
+        
     @IBInspectable public var loadAllPages : Bool = true
     @IBInspectable public var pagesOffLimit : Int = 5
     @IBInspectable public var initialPage : Int = 0
@@ -130,7 +128,7 @@ public class WeePager: UIView {
     }
     
     override public func layoutSubviews() {
-        guard body != nil && !isAnimating else {
+        guard body != nil else {
             return
         }
         body.delegate = nil
@@ -183,20 +181,17 @@ public class WeePager: UIView {
     }
     
     public func prepareToAnimate(show: Bool) {
-        isAnimating = true
-        menuLeftConst.constant = (show) ? self.frame.width : 0
+        menuLeftConst.constant = (show) ? UIScreen.main.bounds.width : 0
         bodyTopConst.constant = (show) ? -self.frame.height : 0
     }
     
-    public func animate(show: Bool, time: Double) {
-        
-        menuLeftConst.constant = (show) ? 0 : self.frame.width
+    public func animate(show: Bool, time: Double, options: UIViewAnimationOptions) {
+        menuLeftConst.constant = (show) ? 0 : UIScreen.main.bounds.width+16
         bodyTopConst.constant = (show) ? 0 : -self.frame.height
         
-        UIView.animate(withDuration: time, delay: 0, usingSpringWithDamping: 1.0, initialSpringVelocity: 0, options: UIViewAnimationOptions.curveEaseInOut, animations: {
+        UIView.animate(withDuration: time, delay: 0, usingSpringWithDamping: 1.0, initialSpringVelocity: 0, options: options, animations: {
             self.layoutIfNeeded()
         }, completion: { _ in
-            self.isAnimating = false
             if show {
                 self.layoutSubviews()
             }
