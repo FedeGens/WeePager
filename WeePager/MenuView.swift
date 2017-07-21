@@ -87,7 +87,7 @@ class MenuView: UIScrollView {
         let indicatorY = (pagerReference.indicatorAlign == .top) ? 0 : (pagerReference.indicatorAlign == .bottom) ? self.frame.height-pagerReference.indicatorHeight : (self.frame.height-pagerReference.indicatorHeight) / 2
         let indicatorWidth = (pagerReference.indicatorWidthAnimated) ? buttons[0].frame.width : pagerReference.indicatorWidth
         indicator = pagerReference.indicatorView
-        indicator.frame = CGRect(x: pagerReference.menuInset, y: indicatorY, width: indicatorWidth, height: pagerReference.indicatorHeight)
+        indicator.frame = CGRect(x: pagerReference.menuInset + buttons[0].frame.width/2 - indicatorWidth/2, y: indicatorY, width: indicatorWidth, height: pagerReference.indicatorHeight)
         indicator.layer.cornerRadius = pagerReference.indicatorCornerRadius
         indicator.backgroundColor = pagerReference.indicatorColor
         indicator.alpha = pagerReference.indicatorAlpha

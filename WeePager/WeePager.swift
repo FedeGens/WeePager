@@ -192,9 +192,10 @@ public class WeePager: UIView {
         
         menuLeftConst.constant = (show) ? 0 : self.frame.width
         bodyTopConst.constant = (show) ? 0 : -self.frame.height
-        UIView.animate(withDuration: time, animations: {
+        
+        UIView.animate(withDuration: time, delay: 0, usingSpringWithDamping: 1.0, initialSpringVelocity: 0, options: UIViewAnimationOptions.curveEaseInOut, animations: {
             self.layoutIfNeeded()
-        }, completion:{_ in
+        }, completion: { _ in
             self.isAnimating = false
             if show {
                 self.layoutSubviews()
