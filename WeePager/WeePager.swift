@@ -10,16 +10,26 @@ import UIKit
 
 public class WeePager: UIView {
     
-    private var menu: MenuView!
-    private var body: BodyView!
+    internal var menu: MenuView!
+    internal var body: BodyView!
     private var separator: UIView = UIView()
     private var page: Int = 0
     public var delegate: MyPagerDelegate?
     public var isLoaded: Bool = false
+    public var bodyInteractable: Bool = true {
+        didSet{
+            body.isUserInteractionEnabled = bodyInteractable
+        }
+    }
+    public var menuInteractable: Bool = true {
+        didSet{
+            menu.isUserInteractionEnabled = menuInteractable
+        }
+    }
     
     private var menuLeftConst: NSLayoutConstraint!
     private var bodyTopConst: NSLayoutConstraint!
-        
+    
     @IBInspectable public var loadAllPages : Bool = true
     @IBInspectable public var pagesOffLimit : Int = 5
     @IBInspectable public var initialPage : Int = 0
