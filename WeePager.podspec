@@ -8,7 +8,7 @@ s.summary = "WeePager is a weeeeee pager."
 s.requires_arc = true
 
 # 2
-s.version = "0.0.23"
+s.version = "0.0.24"
 
 # 3
 s.license = { :type => "MIT", :file => "LICENSE" }

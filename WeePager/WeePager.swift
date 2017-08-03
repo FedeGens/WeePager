@@ -1,5 +1,5 @@
 //
-//  MyPager.swift
+//  MenuView.swift
 //  MyPager
 //
 //  Created by Federico Gentile on 02/01/17.
@@ -8,221 +8,204 @@
 
 import UIKit
 
-public class WeePager: UIView {
+@IBDesignable
+class MenuView: UIScrollView {
     
-    internal var menu: MenuView!
-    internal var body: BodyView!
-    private var separator: UIView = UIView()
-    private var page: Int = 0
-    public var delegate: MyPagerDelegate?
-    public var isLoaded: Bool = false
-    public var bodyInteractable: Bool = true {
-        didSet{
-            body.isUserInteractionEnabled = bodyInteractable
-        }
-    }
-    public var menuInteractable: Bool = true {
-        didSet{
-            menu.isUserInteractionEnabled = menuInteractable
-        }
+    private var buttons : [UIButton] = [UIButton]()
+    private var selectedElem : Int = 0
+    private var indicator: UIView!
+    var bodyReference: BodyView!
+    var pagerReference: WeePager!
+    
+    init(frame: CGRect, titles: [String], images: [UIImage]?, pagerReference: WeePager) {
+        super.init(frame: frame)
+        
+        self.pagerReference = pagerReference
+        self.backgroundColor = pagerReference.menuBackgroundColor
+        setMenu(titles: titles, images: images)
     }
     
-    private var menuLeftConst: NSLayoutConstraint!
-    private var bodyTopConst: NSLayoutConstraint!
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
     
-    @IBInspectable public var loadAllPages : Bool = true
-    @IBInspectable public var pagesOffLimit : Int = 5
-    @IBInspectable public var initialPage : Int = 0
-    @IBInspectable public var animateMenuSelectionScroll : Bool = true
-    
-    @IBInspectable public var menuHeight : CGFloat = 50
-    @IBInspectable public var menuPosition : menuPosition = .top
-    @IBInspectable public var menuBackgroundColor : UIColor = .white
-    @IBInspectable public var menuInset : CGFloat = 32
-    @IBInspectable public var menuShadowEnabled : Bool = false
-    
-    @IBInspectable public var separatorHeight : CGFloat = 0
-    @IBInspectable public var separatorColor : UIColor = .black
-    @IBInspectable public var separatorInset : CGFloat = 0
-    @IBInspectable public var separatorMarginTop : CGFloat = 0
-    @IBInspectable public var separatorMarginBottom : CGFloat = 0
-    
-    @IBInspectable public var itemMaxLines : Int = 1
-    @IBInspectable public var itemMinWidth : CGFloat = 50
-    @IBInspectable public var itemMaxWidth : CGFloat = 150
-    @IBInspectable public var itemInset : CGFloat = 16
-    
-    @IBInspectable public var itemBoldSelected : Bool = true
-    @IBInspectable public var itemCanColor : Bool = true
-    @IBInspectable public var itemColor : UIColor = .gray
-    @IBInspectable public var itemSelectedColor : UIColor = .black
-    @IBInspectable public var itemFont : UIFont = UIFont.systemFont(ofSize: 17)
-    @IBInspectable public var itemBoldFont : UIFont = UIFont.boldSystemFont(ofSize: 17)
-    
-    @IBInspectable public var indicatorView : UIView = UIView()
-    @IBInspectable public var indicatorColor : UIColor = .black
-    @IBInspectable public var indicatorWidthAnimated : Bool = true
-    @IBInspectable public var indicatorWidth : CGFloat = 50
-    @IBInspectable public var indicatorHeight : CGFloat = 3
-    @IBInspectable public var indicatorCornerRadius : CGFloat = 2
-    @IBInspectable public var indicatorAlign : indicatorAlignment = .bottom
-    @IBInspectable public var indicatorAlpha : CGFloat = 1.0
-    
-    @IBInspectable public var bodyScrollable : Bool = true
-    
-    public func set(viewControllers: [UIViewController], titles: [String]?, images: [UIImage]?) {
-        var titleArray = [String]()
-        if titles == nil || titles?.count != viewControllers.count {
-            for elem in viewControllers {
-                let title = (elem.title != nil) ? elem.title! : ""
-                titleArray.append(title)
+    private func setMenu(titles:[String], images: [UIImage]?) {
+        showsVerticalScrollIndicator = false
+        showsHorizontalScrollIndicator = false
+        
+        var myOffset: CGFloat = pagerReference.menuInset
+        
+        // Create and add buttons to menu
+        for i in 0...titles.count-1 {
+            let menuButton = UIButton()
+            
+            if images != nil {
+                menuButton.imageView?.contentMode = .scaleAspectFit
+                menuButton.imageView?.tintColor = pagerReference.itemColor
+                menuButton.setImage(images![i].withRenderingMode(.alwaysTemplate), for: .normal)
+            } else {
+                menuButton.setTitle(titles[i], for: .normal)
+                menuButton.titleLabel?.font = pagerReference.itemFont
+                menuButton.titleLabel?.lineBreakMode = .byTruncatingTail
+                menuButton.titleLabel?.textAlignment = .center
+                menuButton.titleLabel?.numberOfLines = pagerReference.itemMaxLines
+                menuButton.setTitleColor(pagerReference.itemColor, for: .normal)
             }
-        } else {
-            titleArray = titles!
-        }
-        
-        if menu != nil {
-            menu.removeFromSuperview()
-            body.removeFromSuperview()
-            separator.removeFromSuperview()
-        }
-        
-        menu = MenuView(frame: CGRect(x: 0, y: (self.menuPosition == .top) ? 0 : self.frame.height-self.menuHeight, width:self.frame.width, height: self.menuHeight), titles: titleArray, images: images, pagerReference: self)
-        body = BodyView(frame: CGRect(x: 0, y: (self.menuPosition == .top) ? self.menuHeight : 0, width:self.frame.width, height: self.frame.height-self.menuHeight), viewControllers: viewControllers, pagerReference: self)
-        separator.backgroundColor = separatorColor
-        
-        menu.translatesAutoresizingMaskIntoConstraints = false
-        body.translatesAutoresizingMaskIntoConstraints = false
-        separator.translatesAutoresizingMaskIntoConstraints = false
-        
-        menu.bodyReference = body
-        body.menuReference = menu
-        menu.setSelected(index: page)
-        
-        self.addSubview(body)
-        self.addSubview(menu)
-        self.addSubview(separator)
-        
-        setConstraints()
-        isLoaded = true
-    }
-    
-    private func setConstraints() {
-        menuLeftConst = NSLayoutConstraint(item: menu, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1.0, constant: 0)
-        self.addConstraint(menuLeftConst)
-        let rightConst = NSLayoutConstraint(item: menu, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1.0, constant: 0)
-        rightConst.priority = 750
-        self.addConstraint(rightConst)
-        self.addConstraint(NSLayoutConstraint(item: menu, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: self.menuHeight))
-        self.addConstraint(NSLayoutConstraint(item: body, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1.0, constant: 0))
-        self.addConstraint(NSLayoutConstraint(item: body, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1.0, constant: 0))
-        self.addConstraint(NSLayoutConstraint(item: separator, attribute: .leading, relatedBy: .equal, toItem: menu, attribute: .leading, multiplier: 1.0, constant: self.separatorInset))
-        self.addConstraint(NSLayoutConstraint(item: separator, attribute: .trailing, relatedBy: .equal, toItem: menu, attribute: .trailing, multiplier: 1.0, constant: -self.separatorInset))
-        self.addConstraint(NSLayoutConstraint(item: separator, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: self.separatorHeight))
-        
-        if self.menuPosition == .top {
-            self.addConstraint(NSLayoutConstraint(item: menu, attribute: .top, relatedBy: .equal, toItem: self, attribute: .top, multiplier: 1.0, constant: 0))
-            self.addConstraint(NSLayoutConstraint(item: menu, attribute: .bottom, relatedBy: .equal, toItem: separator, attribute: .top, multiplier: 1.0, constant: -separatorMarginTop))
-            bodyTopConst = NSLayoutConstraint(item: separator, attribute: .bottom, relatedBy: .equal, toItem: body, attribute: .top, multiplier: 1.0, constant: -separatorMarginBottom)
-            self.addConstraint(bodyTopConst)
-            let bodyBotConst = NSLayoutConstraint(item: body, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1.0, constant: 0)
-            bodyBotConst.priority = 750
-            self.addConstraint(bodyBotConst)
-        } else {
-            self.addConstraint(NSLayoutConstraint(item: menu, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1.0, constant: 0))
-            self.addConstraint(NSLayoutConstraint(item: menu, attribute: .top, relatedBy: .equal, toItem: separator, attribute: .bottom, multiplier: 1.0, constant: separatorMarginBottom))
-            self.addConstraint(NSLayoutConstraint(item: separator, attribute: .top, relatedBy: .equal, toItem: body, attribute: .bottom, multiplier: 1.0, constant: separatorMarginTop))
-            self.addConstraint(NSLayoutConstraint(item: body, attribute: .top, relatedBy: .equal, toItem: self, attribute: .top, multiplier: 1.0, constant: 0))
-        }
-        
-    }
-    
-    override public func layoutSubviews() {
-        guard body != nil else {
-            return
-        }
-        body.delegate = nil
-        super.layoutSubviews()
-        body.updateLayout()
-        menu.updateLayout()
-        body.delegate = body
-    }
-    
-    internal func didSetPage(index: Int) {
-        page = index
-        delegate?.pagerDidMoveToPage(index: page)
-    }
-    
-    internal func isSettingPage(index: Int) {
-        if page != index {
-            page = index
-            menu.setSelected(index: page)
-            delegate?.pagerIsMovingToPage(index: page)
-        }
-    }
-    
-    public func setPage(forIndex index: Int, animated: Bool) {
-        body.moveToPage(index: index, animated: animated)
-    }
-    
-    public func getPage() -> Int {
-        return page
-    }
-    
-    
-    public func setIndicatorImage(withName name: String) {
-        let myImage = UIImage(named: name)!
-        setIndicatorImage(withImage: myImage)
-    }
-    
-    public func setIndicatorImage(withImage image: UIImage) {
-        let myImageView = UIImageView(image: image)
-        indicatorView = myImageView
-        indicatorColor = .clear
-    }
-    
-    public func setMenuElementTitle(forIndex index: Int, title: String) {
-        menu.setMenuElement(title: title, index: index)
-    }
-    
-    public func reloadData() {
-        for vc in body.viewControllers {
-            vc.viewDidLoad()
-        }
-    }
-    
-    public func prepareToAnimate(show: Bool) {
-        menuLeftConst.constant = (show) ? UIScreen.main.bounds.width : 0
-        bodyTopConst.constant = (show) ? -self.frame.height : 0
-    }
-    
-    public func animate(show: Bool, time: Double, options: UIViewAnimationOptions) {
-        menuLeftConst.constant = (show) ? 0 : UIScreen.main.bounds.width+16
-        bodyTopConst.constant = (show) ? 0 : -self.frame.height
-        
-        UIView.animate(withDuration: time, delay: 0, usingSpringWithDamping: 1.0, initialSpringVelocity: 0, options: options, animations: {
-            self.layoutIfNeeded()
-        }, completion: { _ in
-            if show {
-                self.layoutSubviews()
+            
+            var myButtonWidth = menuButton.intrinsicContentSize.width + pagerReference.itemInset
+            if myButtonWidth < pagerReference.itemMinWidth {
+                myButtonWidth = pagerReference.itemMinWidth
             }
-        })
+            if myButtonWidth > pagerReference.itemMaxWidth {
+                myButtonWidth = pagerReference.itemMaxWidth
+            }
+            menuButton.frame = CGRect(x: myOffset, y: 0, width: myButtonWidth, height: pagerReference.menuHeight)
+            menuButton.tag = i
+            menuButton.addTarget(self, action: #selector(MenuView.buttonPressed(sender:)), for: .touchUpInside)
+            
+            buttons.append(menuButton)
+            self.addSubview(menuButton)
+            myOffset += menuButton.frame.width
+        }
+        myOffset += pagerReference.menuInset
+        
+        //Fill offset
+        if myOffset < self.frame.width {
+            let diff = self.frame.width - myOffset
+            let singleDiff = diff/CGFloat(buttons.count)
+            
+            myOffset = pagerReference.menuInset
+            for elem in buttons {
+                elem.frame = CGRect(x: myOffset, y: 0, width: elem.frame.width+singleDiff, height: pagerReference.menuHeight)
+                myOffset += elem.frame.width
+            }
+            myOffset += pagerReference.menuInset
+        }
+        
+        contentSize = CGSize(width: myOffset, height: pagerReference.menuHeight)
+        
+        let indicatorY = (pagerReference.indicatorAlign == .top) ? 0 : (pagerReference.indicatorAlign == .bottom) ? self.frame.height-pagerReference.indicatorHeight : (self.frame.height-pagerReference.indicatorHeight) / 2
+        let indicatorWidth = (pagerReference.indicatorWidthAnimated) ? buttons[0].frame.width : pagerReference.indicatorWidth
+        indicator = pagerReference.indicatorView
+        indicator.frame = CGRect(x: pagerReference.menuInset + buttons[0].frame.width/2 - indicatorWidth/2, y: indicatorY, width: indicatorWidth, height: pagerReference.indicatorHeight)
+        indicator.layer.cornerRadius = pagerReference.indicatorCornerRadius
+        indicator.backgroundColor = pagerReference.indicatorColor
+        indicator.alpha = pagerReference.indicatorAlpha
+        self.addSubview(indicator)
+        
+        //Shadow
+        if pagerReference.menuShadowEnabled {
+            setShadow()
+        }
     }
-}
-
-public enum indicatorAlignment : String {
-    case top = "top"
-    case middle = "middle"
-    case bottom = "bottom"
-}
-
-public enum menuPosition : String {
-    case top = "top"
-    case bottom = "bottom"
-}
-
-public protocol MyPagerDelegate {
-    func pagerDidMoveToPage(index: Int)
-    func pagerIsMovingToPage(index: Int)
-    func percentageScrolled(percentage: Double)
+    
+    internal func updateLayout() {
+        var myOffset: CGFloat = pagerReference.menuInset
+        for elem in buttons {
+            var myButtonWidth = elem.intrinsicContentSize.width + pagerReference.itemInset
+            if myButtonWidth < pagerReference.itemMinWidth {
+                myButtonWidth = pagerReference.itemMinWidth
+            }
+            if myButtonWidth > pagerReference.itemMaxWidth {
+                myButtonWidth = pagerReference.itemMaxWidth
+            }
+            elem.frame = CGRect(x: myOffset, y: 0, width: myButtonWidth, height: pagerReference.menuHeight)
+            myOffset += elem.frame.width
+        }
+        myOffset += pagerReference.menuInset
+        
+        if myOffset < self.frame.width {
+            let diff = self.frame.width - myOffset
+            let singleDiff = diff/CGFloat(buttons.count)
+            
+            myOffset = pagerReference.menuInset
+            for elem in buttons {
+                elem.frame = CGRect(x: myOffset, y: 0, width: elem.frame.width+singleDiff, height: pagerReference.menuHeight)
+                myOffset += elem.frame.width
+            }
+            myOffset += pagerReference.menuInset
+        }
+        contentSize = CGSize(width: myOffset, height: pagerReference.menuHeight)
+        indicator.frame.origin.x = pagerReference.menuInset + buttons[selectedElem].frame.width/2 - indicator.frame.width/2
+    }
+    
+    @objc private func buttonPressed(sender: UIButton) {
+        bodyReference.moveToPage(index: sender.tag, animated: pagerReference.animateMenuSelectionScroll)
+        if !pagerReference.animateMenuSelectionScroll {
+            moveIndicator(offsetX: Double(self.frame.width)*Double(sender.tag))
+        }
+    }
+    
+    func moveIndicator(offsetX: Double) {
+        let (position,width) = getIndicatorAbsolutePosition(offsetX: offsetX)
+        
+        indicator.frame.origin.x = position
+        indicator.frame.size = CGSize(width: width, height: indicator.frame.height)
+        checkMenuScroll()
+    }
+    
+    private func getIndicatorAbsolutePosition(offsetX: Double) -> (CGFloat, CGFloat) {
+        var position : CGFloat = 0
+        var width : CGFloat = 0
+        guard self.frame.width != 0 else {
+            return (indicator.frame.origin.x, indicator.frame.size.width)
+        }
+        let startingIndex = Int(offsetX/Double(self.frame.width))
+        let internalOffsetPercentage = offsetX.truncatingRemainder(dividingBy: Double(self.frame.width)) / Double(self.frame.width)
+        let internalIndicatorOffsset = Double(getButtonDistance(index: startingIndex)) * internalOffsetPercentage
+        
+        let widthOffset = (startingIndex+1 < buttons.count) ? buttons[startingIndex+1].frame.width - buttons[startingIndex].frame.width : 0
+        let internalWidthOffset = widthOffset * CGFloat(internalOffsetPercentage)
+        
+        position = getButtonPosition(index: startingIndex) + CGFloat(internalIndicatorOffsset) - indicator.frame.width/2
+        width = (pagerReference.indicatorWidthAnimated) ? buttons[startingIndex].frame.width + internalWidthOffset : indicator.frame.size.width
+        
+        return (position, width)
+    }
+    
+    private func getButtonPosition(index: Int) -> CGFloat {
+        let position = buttons[index].frame.origin.x + buttons[index].frame.width/2
+        return position
+    }
+    
+    private func getButtonDistance(index: Int) -> CGFloat {
+        let distance = (index+1 < buttons.count) ? getButtonPosition(index: index+1) - getButtonPosition(index: index) : buttons[index].frame.width
+        return distance
+    }
+    
+    private func checkMenuScroll() {
+        var newX = indicator.frame.origin.x - (frame.width - indicator.frame.width)/2
+        newX = (newX < 0) ? 0 : (newX > self.contentSize.width - self.frame.width) ? self.contentSize.width - self.frame.width : newX
+        self.setContentOffset(CGPoint(x: newX, y: 0), animated: false)
+    }
+    
+    internal func setSelected(index: Int) {
+        if pagerReference.itemBoldSelected {
+            buttons[selectedElem].titleLabel?.font = pagerReference.itemFont
+            buttons[index].titleLabel?.font = pagerReference.itemBoldFont
+        }
+        
+        if pagerReference.itemCanColor {
+            buttons[selectedElem].setTitleColor(pagerReference.itemColor, for: .normal)
+            buttons[selectedElem].imageView?.tintColor = pagerReference.itemColor
+            buttons[index].setTitleColor(pagerReference.itemSelectedColor, for: .normal)
+            buttons[index].imageView?.tintColor = pagerReference.itemSelectedColor
+        }
+        selectedElem = index
+        bodyReference.checkCreatedPages(index: index)
+    }
+    
+    internal func setMenuElement(title: String, index: Int) {
+        buttons[index].setTitle(title, for: .normal)
+    }
+    
+    //MARK: Shadow
+    func setShadow() {
+        self.layer.masksToBounds = false
+        self.layer.shouldRasterize = false
+        self.layer.shadowOpacity = 0.4
+        self.layer.shadowRadius = 1.5
+        self.layer.shadowColor = UIColor.black.cgColor
+        self.layer.shadowOffset = CGSize(width: 0, height: 2.5)
+    }
 }

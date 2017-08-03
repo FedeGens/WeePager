@@ -125,9 +125,8 @@ class MenuView: UIScrollView {
             }
             myOffset += pagerReference.menuInset
         }
-        
-        
         contentSize = CGSize(width: myOffset, height: pagerReference.menuHeight)
+        indicator.frame.origin.x = getButtonPosition(index: pagerReference.getPage()) - indicator.frame.width/2
     }
     
     @objc private func buttonPressed(sender: UIButton) {
