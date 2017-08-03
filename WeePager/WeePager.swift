@@ -144,6 +144,7 @@ public class WeePager: UIView {
         body.delegate = nil
         super.layoutSubviews()
         body.updateLayout()
+        menu.updateLayout()
         body.delegate = body
     }
     

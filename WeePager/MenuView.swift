@@ -99,6 +99,37 @@ class MenuView: UIScrollView {
         }
     }
     
+    internal func updateLayout() {
+        var myOffset: CGFloat = pagerReference.menuInset
+        for elem in buttons {
+            var myButtonWidth = elem.intrinsicContentSize.width + pagerReference.itemInset
+            if myButtonWidth < pagerReference.itemMinWidth {
+                myButtonWidth = pagerReference.itemMinWidth
+            }
+            if myButtonWidth > pagerReference.itemMaxWidth {
+                myButtonWidth = pagerReference.itemMaxWidth
+            }
+            elem.frame = CGRect(x: myOffset, y: 0, width: myButtonWidth, height: pagerReference.menuHeight)
+            myOffset += elem.frame.width
+        }
+        myOffset += pagerReference.menuInset
+        
+        if myOffset < self.frame.width {
+            let diff = self.frame.width - myOffset
+            let singleDiff = diff/CGFloat(buttons.count)
+            
+            myOffset = pagerReference.menuInset
+            for elem in buttons {
+                elem.frame = CGRect(x: myOffset, y: 0, width: elem.frame.width+singleDiff, height: pagerReference.menuHeight)
+                myOffset += elem.frame.width
+            }
+            myOffset += pagerReference.menuInset
+        }
+        
+        
+        contentSize = CGSize(width: myOffset, height: pagerReference.menuHeight)
+    }
+    
     @objc private func buttonPressed(sender: UIButton) {
         bodyReference.moveToPage(index: sender.tag, animated: pagerReference.animateMenuSelectionScroll)
         if !pagerReference.animateMenuSelectionScroll {
