@@ -187,8 +187,8 @@ public class WeePager: UIView {
     
     public func reloadData() {
         for vc in body.viewControllers {
-            vc.viewWillAppear()
-            vc.viewDidAppear()
+            vc.viewWillAppear(true)
+            vc.viewDidAppear(true)
         }
     }
     
