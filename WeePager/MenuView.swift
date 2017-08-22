@@ -84,7 +84,7 @@ class MenuView: UIScrollView {
         
         contentSize = CGSize(width: myOffset, height: pagerReference.menuHeight)
         
-        let indicatorY = (pagerReference.indicatorAlign == .top) ? 0 : (pagerReference.indicatorAlign == .bottom) ? self.frame.height-pagerReference.indicatorHeight : (self.frame.height-pagerReference.indicatorHeight) / 2
+        let indicatorY = ((pagerReference.indicatorAlign == .top) ? 0 : (pagerReference.indicatorAlign == .bottom) ? self.frame.height-pagerReference.indicatorHeight : (self.frame.height-pagerReference.indicatorHeight) / 2) - pagerReference.indicatorOffsetY
         let indicatorWidth = (pagerReference.indicatorWidthAnimated) ? buttons[0].frame.width : pagerReference.indicatorWidth
         indicator = pagerReference.indicatorView
         indicator.frame = CGRect(x: pagerReference.menuInset + buttons[0].frame.width/2 - indicatorWidth/2, y: indicatorY, width: indicatorWidth, height: pagerReference.indicatorHeight)
@@ -203,9 +203,9 @@ class MenuView: UIScrollView {
     func setShadow() {
         self.layer.masksToBounds = false
         self.layer.shouldRasterize = false
-        self.layer.shadowOpacity = 0.4
-        self.layer.shadowRadius = 1.5
+        self.layer.shadowOpacity = pagerReference.menuShadowOpacity
+        self.layer.shadowRadius = pagerReference.menuShadowRadius
         self.layer.shadowColor = UIColor.black.cgColor
-        self.layer.shadowOffset = CGSize(width: 0, height: 2.5)
+        self.layer.shadowOffset = CGSize(width: pagerReference.menuShadowWidth, height: pagerReference.menuShadowHeight)
     }
 }

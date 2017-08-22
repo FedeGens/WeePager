@@ -40,6 +40,10 @@ public class WeePager: UIView {
     @IBInspectable public var menuBackgroundColor : UIColor = .white
     @IBInspectable public var menuInset : CGFloat = 32
     @IBInspectable public var menuShadowEnabled : Bool = false
+    @IBInspectable public var menuShadowOpacity : Float = 0.4
+    @IBInspectable public var menuShadowRadius : CGFloat = 1.5
+    @IBInspectable public var menuShadowWidth : CGFloat = 0
+    @IBInspectable public var menuShadowHeight : CGFloat = 2.5
     
     @IBInspectable public var separatorHeight : CGFloat = 0
     @IBInspectable public var separatorColor : UIColor = .black
@@ -67,6 +71,7 @@ public class WeePager: UIView {
     @IBInspectable public var indicatorCornerRadius : CGFloat = 2
     @IBInspectable public var indicatorAlign : indicatorAlignment = .bottom
     @IBInspectable public var indicatorAlpha : CGFloat = 1.0
+    @IBInspectable public var indicatorOffsetY : CGFloat = 0.0
     
     @IBInspectable public var bodyScrollable : Bool = true
     
@@ -187,8 +192,7 @@ public class WeePager: UIView {
     
     public func reloadData() {
         for vc in body.viewControllers {
-            vc.viewWillAppear(true)
-            vc.viewDidAppear(true)
+            vc.viewDidLoad()
         }
     }
     
