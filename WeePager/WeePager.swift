@@ -155,14 +155,14 @@ public class WeePager: UIView {
     
     internal func didSetPage(index: Int) {
         page = index
-        delegate?.pagerDidMoveToPage(index: page)
+        delegate?.pagerDidMoveToPage?(index: page)
     }
     
     internal func isSettingPage(index: Int) {
         if page != index {
             page = index
             menu.setSelected(index: page)
-            delegate?.pagerIsMovingToPage(index: page)
+            delegate?.pagerIsMovingToPage?(index: page)
         }
     }
     
@@ -226,8 +226,9 @@ public enum menuPosition : String {
     case bottom = "bottom"
 }
 
-public protocol MyPagerDelegate {
-    func pagerDidMoveToPage(index: Int)
-    func pagerIsMovingToPage(index: Int)
-    func percentageScrolled(percentage: Double)
+@objc public protocol MyPagerDelegate {
+    @objc optional func pagerWillBeginMoving(fromIndex index: Int)
+    @objc optional func pagerDidMoveToPage(index: Int)
+    @objc optional func pagerIsMovingToPage(index: Int)
+    @objc optional func percentageScrolled(percentage: Double)
 }
