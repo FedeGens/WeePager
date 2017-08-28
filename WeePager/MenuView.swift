@@ -94,9 +94,7 @@ class MenuView: UIScrollView {
         self.addSubview(indicator)
         
         //Shadow
-        if pagerReference.menuShadowEnabled {
-            setShadow()
-        }
+        setShadow()
     }
     
     internal func updateLayout() {
@@ -201,11 +199,15 @@ class MenuView: UIScrollView {
     
     //MARK: Shadow
     func setShadow() {
-        self.layer.masksToBounds = false
-        self.layer.shouldRasterize = false
-        self.layer.shadowOpacity = pagerReference.menuShadowOpacity
-        self.layer.shadowRadius = pagerReference.menuShadowRadius
-        self.layer.shadowColor = UIColor.black.cgColor
-        self.layer.shadowOffset = CGSize(width: pagerReference.menuShadowWidth, height: pagerReference.menuShadowHeight)
+        if pagerReference.menuShadowEnabled {
+            self.layer.masksToBounds = false
+            self.layer.shouldRasterize = false
+            self.layer.shadowOpacity = pagerReference.menuShadowOpacity
+            self.layer.shadowRadius = pagerReference.menuShadowRadius
+            self.layer.shadowColor = UIColor.black.cgColor
+            self.layer.shadowOffset = CGSize(width: pagerReference.menuShadowWidth, height: pagerReference.menuShadowHeight)
+        } else {
+            self.layer.masksToBounds = true
+        }
     }
 }

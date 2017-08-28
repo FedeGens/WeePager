@@ -202,17 +202,23 @@ public class WeePager: UIView {
         bodyTopConst.constant = (show) ? -self.frame.height : 0
     }
     
-    public func animate(show: Bool, time: Double, options: UIViewAnimationOptions) {
+    public func animate(show: Bool, time: Double, options: UIViewAnimationOptions, completion: (()->())? = nil ) {
         menuLeftConst.constant = (show) ? 0 : UIScreen.main.bounds.width+16
         bodyTopConst.constant = (show) ? 0 : -self.frame.height
         
         UIView.animate(withDuration: time, delay: 0, usingSpringWithDamping: 1.0, initialSpringVelocity: 0, options: options, animations: {
             self.layoutIfNeeded()
         }, completion: { _ in
+            completion?()
             if show {
                 self.layoutSubviews()
             }
         })
+    }
+    
+    public func set(menuShadowVisible visible: Bool) {
+        self.menuShadowEnabled = visible
+        self.menu.setShadow()
     }
 }
 
