@@ -47,30 +47,32 @@ class MenuView: UIScrollView {
                 menuButton.setTitle(titles[i], for: .normal)
                 menuButton.titleLabel?.font = pagerReference.itemFont
                 menuButton.titleLabel?.lineBreakMode = .byTruncatingTail
-                menuButton.titleLabel?.textAlignment = .center
+                menuButton.titleLabel?.textAlignment = pagerReference.itemAlignment
                 menuButton.titleLabel?.numberOfLines = pagerReference.itemMaxLines
                 menuButton.setTitleColor(pagerReference.itemColor, for: .normal)
+                menuButton.contentHorizontalAlignment = UIControlContentHorizontalAlignment.left
             }
             
-            var myButtonWidth = menuButton.intrinsicContentSize.width + pagerReference.itemInset
+            var myButtonWidth = menuButton.intrinsicContentSize.width * ((pagerReference.itemBoldSelected) ? 1.05 : 1) // adjust for bold
+            let myItemInset = (i != 0) ? pagerReference.itemInset : 0
             if myButtonWidth < pagerReference.itemMinWidth {
                 myButtonWidth = pagerReference.itemMinWidth
             }
             if myButtonWidth > pagerReference.itemMaxWidth {
                 myButtonWidth = pagerReference.itemMaxWidth
             }
-            menuButton.frame = CGRect(x: myOffset, y: 0, width: myButtonWidth, height: pagerReference.menuHeight)
+            menuButton.frame = CGRect(x: myOffset + myItemInset, y: 0, width: myButtonWidth, height: pagerReference.menuHeight)
             menuButton.tag = i
             menuButton.addTarget(self, action: #selector(MenuView.buttonPressed(sender:)), for: .touchUpInside)
             
             buttons.append(menuButton)
             self.addSubview(menuButton)
-            myOffset += menuButton.frame.width
+            myOffset += menuButton.frame.width + myItemInset
         }
         myOffset += pagerReference.menuInset
         
-        //Fill offset
-        if myOffset < self.frame.width {
+        //Fill offset (if menuFillItems == true)
+        if pagerReference.menuFillItems && myOffset < self.frame.width {
             let diff = self.frame.width - myOffset
             let singleDiff = diff/CGFloat(buttons.count)
             
@@ -100,19 +102,20 @@ class MenuView: UIScrollView {
     internal func updateLayout() {
         var myOffset: CGFloat = pagerReference.menuInset
         for elem in buttons {
-            var myButtonWidth = elem.intrinsicContentSize.width + pagerReference.itemInset
+            var myButtonWidth = elem.intrinsicContentSize.width * ((pagerReference.itemBoldSelected) ? 1.05 : 1) //adjust for bold
+            let myItemInset = (buttons.index(of: elem) != 0) ? pagerReference.itemInset : 0
             if myButtonWidth < pagerReference.itemMinWidth {
                 myButtonWidth = pagerReference.itemMinWidth
             }
             if myButtonWidth > pagerReference.itemMaxWidth {
                 myButtonWidth = pagerReference.itemMaxWidth
             }
-            elem.frame = CGRect(x: myOffset, y: 0, width: myButtonWidth, height: pagerReference.menuHeight)
-            myOffset += elem.frame.width
+            elem.frame = CGRect(x: myOffset + myItemInset, y: 0, width: myButtonWidth, height: pagerReference.menuHeight)
+            myOffset += elem.frame.width + myItemInset
         }
         myOffset += pagerReference.menuInset
         
-        if myOffset < self.frame.width {
+        if pagerReference.menuFillItems && myOffset < self.frame.width {
             let diff = self.frame.width - myOffset
             let singleDiff = diff/CGFloat(buttons.count)
             
@@ -173,7 +176,7 @@ class MenuView: UIScrollView {
     
     private func checkMenuScroll() {
         var newX = indicator.frame.origin.x - (frame.width - indicator.frame.width)/2
-        newX = (newX < 0) ? 0 : (newX > self.contentSize.width - self.frame.width) ? self.contentSize.width - self.frame.width : newX
+        newX = (newX < 0 || self.contentSize.width < self.frame.width) ? 0 : (newX > self.contentSize.width - self.frame.width) ? self.contentSize.width - self.frame.width : newX
         self.setContentOffset(CGPoint(x: newX, y: 0), animated: false)
     }
     
@@ -197,8 +200,22 @@ class MenuView: UIScrollView {
         buttons[index].setTitle(title, for: .normal)
     }
     
+    internal func refreshMenuProperties() {
+        for elem in buttons {
+            elem.imageView?.contentMode = .scaleAspectFit
+            elem.imageView?.tintColor = pagerReference.itemColor
+            elem.titleLabel?.font = pagerReference.itemFont
+            elem.titleLabel?.lineBreakMode = .byTruncatingTail
+            elem.titleLabel?.textAlignment = pagerReference.itemAlignment
+            elem.titleLabel?.numberOfLines = pagerReference.itemMaxLines
+            elem.setTitleColor(pagerReference.itemColor, for: .normal)
+            elem.contentHorizontalAlignment = UIControlContentHorizontalAlignment.left
+        }
+        setSelected(index: selectedElem)
+    }
+    
     //MARK: Shadow
-    func setShadow() {
+    internal func setShadow() {
         if pagerReference.menuShadowEnabled {
             self.layer.masksToBounds = false
             self.layer.shouldRasterize = false

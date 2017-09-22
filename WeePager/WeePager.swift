@@ -44,6 +44,7 @@ public class WeePager: UIView {
     @IBInspectable public var menuShadowRadius : CGFloat = 1.5
     @IBInspectable public var menuShadowWidth : CGFloat = 0
     @IBInspectable public var menuShadowHeight : CGFloat = 2.5
+    @IBInspectable public var menuFillItems : Bool = true
     
     @IBInspectable public var separatorHeight : CGFloat = 0
     @IBInspectable public var separatorColor : UIColor = .black
@@ -55,6 +56,7 @@ public class WeePager: UIView {
     @IBInspectable public var itemMinWidth : CGFloat = 50
     @IBInspectable public var itemMaxWidth : CGFloat = 150
     @IBInspectable public var itemInset : CGFloat = 16
+    @IBInspectable public var itemAlignment : NSTextAlignment = .center
     
     @IBInspectable public var itemBoldSelected : Bool = true
     @IBInspectable public var itemCanColor : Bool = true
@@ -74,6 +76,7 @@ public class WeePager: UIView {
     @IBInspectable public var indicatorOffsetY : CGFloat = 0.0
     
     @IBInspectable public var bodyScrollable : Bool = true
+    @IBInspectable public var bodyBounceable : Bool = true
     
     public func set(viewControllers: [UIViewController], titles: [String]?, images: [UIImage]?) {
         var titleArray = [String]()
@@ -174,7 +177,6 @@ public class WeePager: UIView {
         return page
     }
     
-    
     public func setIndicatorImage(withName name: String) {
         let myImage = UIImage(named: name)!
         setIndicatorImage(withImage: myImage)
@@ -219,6 +221,10 @@ public class WeePager: UIView {
     public func set(menuShadowVisible visible: Bool) {
         self.menuShadowEnabled = visible
         self.menu.setShadow()
+    }
+    
+    public func refreshMenuProperties() {
+        menu.refreshMenuProperties()
     }
 }
 
