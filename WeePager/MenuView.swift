@@ -201,6 +201,7 @@ class MenuView: UIScrollView {
     }
     
     internal func refreshMenuProperties() {
+        //buttons
         for elem in buttons {
             elem.imageView?.contentMode = .scaleAspectFit
             elem.imageView?.tintColor = pagerReference.itemColor
@@ -212,6 +213,11 @@ class MenuView: UIScrollView {
             elem.contentHorizontalAlignment = UIControlContentHorizontalAlignment.left
         }
         setSelected(index: selectedElem)
+        
+        //indicator
+        indicator.layer.cornerRadius = pagerReference.indicatorCornerRadius
+        indicator.backgroundColor = pagerReference.indicatorColor
+        indicator.alpha = pagerReference.indicatorAlpha
     }
     
     //MARK: Shadow
