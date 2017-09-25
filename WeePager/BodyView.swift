@@ -13,6 +13,7 @@ class BodyView: UIScrollView, UIScrollViewDelegate {
     
     private var initialPosition : Double!
     var viewControllers : [UIViewController] = [UIViewController]()
+    var infiniteViewControllers : [UIViewController] = [UIViewController]()
     var menuReference: MenuView!
     var pagerReference: WeePager!
     
@@ -37,6 +38,66 @@ class BodyView: UIScrollView, UIScrollViewDelegate {
     }
     
     internal func updateLayout() {
+        //setup infiniteScroll
+        guard !pagerReference.infiniteScroll else {
+            let selectedVC = viewControllers[pagerReference.getPage()]
+            let halfCount = (viewControllers.count - 1)/2
+            var vcRightArr: [UIViewController] = []
+            var vcLeftArr: [UIViewController] = []
+            
+            //rightArr
+            if pagerReference.getPage() + halfCount < viewControllers.count {
+                for i in 1...halfCount {
+                    vcRightArr.append(viewControllers[pagerReference.getPage()+i])
+                }
+            } else {
+                let diff = pagerReference.getPage() + halfCount - viewControllers.count
+                for i in 1..<halfCount-diff {
+                    vcRightArr.append(viewControllers[pagerReference.getPage()+i])
+                }
+                for i in 0...diff {
+                    vcRightArr.append(viewControllers[i])
+                }
+            }
+            
+            //leftArr
+            if pagerReference.getPage() - halfCount >= 0 {
+                for i in 1...halfCount {
+                    vcLeftArr.append(viewControllers[pagerReference.getPage()-i])
+                }
+            } else {
+                let diff = pagerReference.getPage() - halfCount
+                for i in (0..<pagerReference.getPage()).reversed() {
+                    vcLeftArr.append(viewControllers[i])
+                }
+                for i in (viewControllers.count+diff..<viewControllers.count).reversed() {
+                    vcLeftArr.append(viewControllers[i])
+                }
+            }
+            
+            infiniteViewControllers = vcLeftArr.reversed() + [selectedVC] + vcRightArr
+            
+            selectedVC.view.frame.size = self.frame.size
+            selectedVC.view.frame.origin.x = 0
+            
+            for elem in vcRightArr {
+                let index = vcRightArr.index(of: elem)! + 1
+                elem.view.frame.size = self.frame.size
+                elem.view.frame.origin.x = CGFloat(index)*self.frame.width
+            }
+            
+            for elem in vcLeftArr.reversed() {
+                let index = vcLeftArr.index(of: elem)! + 1
+                elem.view.frame.size = self.frame.size
+                elem.view.frame.origin.x = -CGFloat(index)*self.frame.width
+            }
+            self.contentInset = UIEdgeInsetsMake(0, CGFloat(vcLeftArr.count)*self.frame.width, 0, 0)
+            self.contentSize = CGSize(width: frame.width*CGFloat(vcRightArr.count), height: frame.height)
+            self.contentOffset.x = 0
+            pagerReference.bodyOldIndex = 0
+            return
+        }
+        
         for elem in viewControllers {
             let index = viewControllers.index(of: elem)!
             elem.view.frame.size = self.frame.size
@@ -56,16 +117,29 @@ class BodyView: UIScrollView, UIScrollViewDelegate {
     }
     
     internal func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        pagerReference.didSetPage(index: (self.currentPage < viewControllers.count) ? self.currentPage : viewControllers.count-1)
+        if !pagerReference.infiniteScroll {
+            pagerReference.didSetPage(index: (self.currentPage < viewControllers.count) ? self.currentPage : viewControllers.count-1)
+        } else {
+            pagerReference.didSetPage(index: pagerReference.getPage())
+        }
     }
     
     internal func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
-        pagerReference.didSetPage(index: (self.currentPage < viewControllers.count) ? self.currentPage : viewControllers.count-1)
+        if !pagerReference.infiniteScroll {
+            pagerReference.didSetPage(index: (self.currentPage < viewControllers.count) ? self.currentPage : viewControllers.count-1)
+        } else {
+            pagerReference.didSetPage(index: pagerReference.getPage())
+        }
     }
     
     internal func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        pagerReference.isSettingPage(index: (self.currentHalfPage < viewControllers.count) ? self.currentHalfPage : viewControllers.count-1)
-        menuReference.moveIndicator(offsetX: Double(scrollView.contentOffset.x))
+        print(scrollView.contentOffset)
+        if !pagerReference.infiniteScroll {
+            pagerReference.isSettingPage(index: (self.currentHalfPage < viewControllers.count) ? self.currentHalfPage : viewControllers.count-1)
+            menuReference.moveIndicator(offsetX: Double(scrollView.contentOffset.x))
+        } else {
+            pagerReference.isSettingPage(index: self.currentHalfPageInfinite)
+        }
         pagerReference.delegate?.percentageScrolled?(percentage: Double(scrollView.contentOffset.x / (CGFloat(viewControllers.count-1) * self.frame.width)))
     }
     
@@ -90,6 +164,24 @@ class BodyView: UIScrollView, UIScrollViewDelegate {
             }
         }
     }
+    
+    internal func updateInfiniteViewControllersPosition(forward: Bool) {
+        if forward {
+            let firstVc = infiniteViewControllers.remove(at: 0)
+            firstVc.view.frame.origin.x = infiniteViewControllers.last!.view.frame.origin.x + self.frame.width
+            infiniteViewControllers.append(firstVc)
+            
+            //self.contentInset = UIEdgeInsetsMake(0, self.contentInset.left-self.frame.width, 0, 0)
+            self.contentSize = CGSize(width: self.contentSize.width+self.frame.width, height: self.contentSize.height)
+        } else {
+            let lastVc = infiniteViewControllers.remove(at: infiniteViewControllers.count-1)
+            lastVc.view.frame.origin.x = infiniteViewControllers.first!.view.frame.origin.x - self.frame.width
+            infiniteViewControllers.insert(lastVc, at: 0)
+            
+            self.contentInset = UIEdgeInsetsMake(0, self.contentInset.left+self.frame.width, 0, 0)
+            //self.contentSize = CGSize(width: self.contentSize.width-self.frame.width, height: self.contentSize.height)
+        }
+    }
 }
 
 internal extension BodyView {
@@ -97,7 +189,14 @@ internal extension BodyView {
         return Int(self.contentOffset.x/self.frame.width)
     }
     
-    var currentHalfPage:Int{
+    var currentHalfPage:Int {
+        return Int((self.contentOffset.x+(0.5*self.frame.size.width))/self.frame.width)
+    }
+    
+    var currentHalfPageInfinite:Int {
+        if self.contentOffset.x < 0 {
+            return Int((self.contentOffset.x+(-0.5*self.frame.size.width))/self.frame.width)
+        }
         return Int((self.contentOffset.x+(0.5*self.frame.size.width))/self.frame.width)
     }
 }

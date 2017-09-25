@@ -13,7 +13,8 @@ public class WeePager: UIView {
     internal var menu: MenuView!
     internal var body: BodyView!
     private var separator: UIView = UIView()
-    private var page: Int = 0
+    internal var page: Int = 0
+    internal var bodyOldIndex: Int = 0
     public var delegate: MyPagerDelegate?
     public var isLoaded: Bool = false
     public var bodyInteractable: Bool = true {
@@ -77,6 +78,8 @@ public class WeePager: UIView {
     
     @IBInspectable public var bodyScrollable : Bool = true
     @IBInspectable public var bodyBounceable : Bool = true
+    
+    @IBInspectable public var infiniteScroll : Bool = false
     
     public func set(viewControllers: [UIViewController], titles: [String]?, images: [UIImage]?) {
         var titleArray = [String]()
@@ -162,6 +165,23 @@ public class WeePager: UIView {
     }
     
     internal func isSettingPage(index: Int) {
+        guard !infiniteScroll else {
+            if bodyOldIndex != index {
+                body.updateInfiniteViewControllersPosition(forward: (index > bodyOldIndex))
+                page += (index > bodyOldIndex) ? 1 : -1
+                bodyOldIndex = index
+                if page == body.viewControllers.count {
+                    page = 0
+                } else if page < 0 {
+                    page = body.viewControllers.count-1
+                }
+                
+                delegate?.pagerIsMovingToPage?(index: page)
+            }
+            
+            return
+        }
+        
         if page != index {
             page = index
             menu.setSelected(index: page)
@@ -170,7 +190,13 @@ public class WeePager: UIView {
     }
     
     public func setPage(forIndex index: Int, animated: Bool) {
-        body.moveToPage(index: index, animated: animated)
+        if !infiniteScroll {
+            body.moveToPage(index: index, animated: animated)
+        } else {
+            page = index
+            body.updateLayout()
+            page = index
+        }
     }
     
     public func getPage() -> Int {
