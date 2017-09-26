@@ -133,7 +133,6 @@ class BodyView: UIScrollView, UIScrollViewDelegate {
     }
     
     internal func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        print(scrollView.contentOffset)
         if !pagerReference.infiniteScroll {
             pagerReference.isSettingPage(index: (self.currentHalfPage < viewControllers.count) ? self.currentHalfPage : viewControllers.count-1)
             menuReference.moveIndicator(offsetX: Double(scrollView.contentOffset.x))
