@@ -19,12 +19,12 @@ public class WeePager: UIView {
     public var isLoaded: Bool = false
     public var bodyInteractable: Bool = true {
         didSet{
-            body.isUserInteractionEnabled = bodyInteractable
+            body?.isUserInteractionEnabled = bodyInteractable
         }
     }
     public var menuInteractable: Bool = true {
         didSet{
-            menu.isUserInteractionEnabled = menuInteractable
+            menu?.isUserInteractionEnabled = menuInteractable
         }
     }
     
@@ -82,6 +82,12 @@ public class WeePager: UIView {
     @IBInspectable public var infiniteScroll : Bool = false
     
     public func set(viewControllers: [UIViewController], titles: [String]?, images: [UIImage]?) {
+        
+        guard viewControllers.count > 0 else {
+            print("WeePager WARNING: - add at least one viewController to init the pager")
+            return
+        }
+        
         var titleArray = [String]()
         if titles == nil || titles?.count != viewControllers.count {
             for elem in viewControllers {
