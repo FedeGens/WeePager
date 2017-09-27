@@ -184,7 +184,6 @@ public class WeePager: UIView {
                 
                 delegate?.pagerIsMovingToPage?(index: page)
             }
-            
             return
         }
         
@@ -196,13 +195,13 @@ public class WeePager: UIView {
     }
     
     public func setPage(forIndex index: Int, animated: Bool) {
-        if !infiniteScroll {
-            body.moveToPage(index: index, animated: animated)
-        } else {
+        guard !infiniteScroll else {
             page = index
             body.updateLayout()
             page = index
+            return
         }
+        body.moveToPage(index: index, animated: animated)
     }
     
     public func getPage() -> Int {
