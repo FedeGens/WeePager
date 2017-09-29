@@ -40,6 +40,10 @@ class BodyView: UIScrollView, UIScrollViewDelegate {
     internal func updateLayout() {
         //setup infiniteScroll
         guard !pagerReference.infiniteScroll else {
+            guard viewControllers.count > 1 else {
+                print("WeePager WARNING: - can't setup an infiniteScroll. There is only one controller or less")
+                return
+            }
             updateLayoutInfiniteScroll()
             return
         }

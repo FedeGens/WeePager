@@ -224,6 +224,10 @@ public class WeePager: UIView {
     }
     
     public func reloadData() {
+        guard body != nil else {
+            print("WeePager WARNING: - can't reload data. WeePager wasn't initialized yet")
+            return
+        }
         for vc in body.viewControllers {
             vc.viewWillAppear(true)
             vc.viewDidAppear(true)
