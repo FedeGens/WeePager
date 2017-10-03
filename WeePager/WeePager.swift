@@ -37,7 +37,7 @@ public class WeePager: UIView {
     @IBInspectable public var animateMenuSelectionScroll : Bool = true
     
     @IBInspectable public var menuHeight : CGFloat = 50
-    @IBInspectable public var menuPosition : menuPosition = .top
+    public var menuPosition : menuPosition = .top
     @IBInspectable public var menuBackgroundColor : UIColor = .white
     @IBInspectable public var menuInset : CGFloat = 32
     @IBInspectable public var menuShadowEnabled : Bool = false
@@ -57,7 +57,7 @@ public class WeePager: UIView {
     @IBInspectable public var itemMinWidth : CGFloat = 50
     @IBInspectable public var itemMaxWidth : CGFloat = 150
     @IBInspectable public var itemInset : CGFloat = 16
-    @IBInspectable public var itemAlignment : NSTextAlignment = .center
+    @IBInspectable public var itemAlignment : UIControlContentHorizontalAlignment = .center
     
     @IBInspectable public var itemBoldSelected : Bool = true
     @IBInspectable public var itemCanColor : Bool = true
@@ -72,7 +72,7 @@ public class WeePager: UIView {
     @IBInspectable public var indicatorWidth : CGFloat = 50
     @IBInspectable public var indicatorHeight : CGFloat = 3
     @IBInspectable public var indicatorCornerRadius : CGFloat = 2
-    @IBInspectable public var indicatorAlign : indicatorAlignment = .bottom
+    public var indicatorAlign : indicatorAlignment = .bottom
     @IBInspectable public var indicatorAlpha : CGFloat = 1.0
     @IBInspectable public var indicatorOffsetY : CGFloat = 0.0
     
@@ -122,13 +122,15 @@ public class WeePager: UIView {
         
         setConstraints()
         isLoaded = true
+        
+        didSetPage(index: initialPage)
     }
     
     private func setConstraints() {
         menuLeftConst = NSLayoutConstraint(item: menu, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1.0, constant: 0)
         self.addConstraint(menuLeftConst)
         let rightConst = NSLayoutConstraint(item: menu, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1.0, constant: 0)
-        rightConst.priority = 750
+        rightConst.priority = UILayoutPriority(rawValue: 750)
         self.addConstraint(rightConst)
         self.addConstraint(NSLayoutConstraint(item: menu, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: self.menuHeight))
         self.addConstraint(NSLayoutConstraint(item: body, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1.0, constant: 0))
@@ -143,7 +145,7 @@ public class WeePager: UIView {
             bodyTopConst = NSLayoutConstraint(item: separator, attribute: .bottom, relatedBy: .equal, toItem: body, attribute: .top, multiplier: 1.0, constant: -separatorMarginBottom)
             self.addConstraint(bodyTopConst)
             let bodyBotConst = NSLayoutConstraint(item: body, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1.0, constant: 0)
-            bodyBotConst.priority = 750
+            bodyBotConst.priority = UILayoutPriority(rawValue: 750)
             self.addConstraint(bodyBotConst)
         } else {
             self.addConstraint(NSLayoutConstraint(item: menu, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1.0, constant: 0))
@@ -224,10 +226,6 @@ public class WeePager: UIView {
     }
     
     public func reloadData() {
-        guard body != nil else {
-            print("WeePager WARNING: - can't reload data. WeePager wasn't initialized yet")
-            return
-        }
         for vc in body.viewControllers {
             vc.viewWillAppear(true)
             vc.viewDidAppear(true)

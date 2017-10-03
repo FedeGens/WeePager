@@ -47,10 +47,9 @@ class MenuView: UIScrollView {
                 menuButton.setTitle(titles[i], for: .normal)
                 menuButton.titleLabel?.font = pagerReference.itemFont
                 menuButton.titleLabel?.lineBreakMode = .byTruncatingTail
-                menuButton.titleLabel?.textAlignment = pagerReference.itemAlignment
                 menuButton.titleLabel?.numberOfLines = pagerReference.itemMaxLines
                 menuButton.setTitleColor(pagerReference.itemColor, for: .normal)
-                menuButton.contentHorizontalAlignment = UIControlContentHorizontalAlignment.left
+                menuButton.contentHorizontalAlignment = pagerReference.itemAlignment
             }
             
             var myButtonWidth = menuButton.intrinsicContentSize.width * ((pagerReference.itemBoldSelected) ? 1.05 : 1) // adjust for bold
@@ -207,10 +206,9 @@ class MenuView: UIScrollView {
             elem.imageView?.tintColor = pagerReference.itemColor
             elem.titleLabel?.font = pagerReference.itemFont
             elem.titleLabel?.lineBreakMode = .byTruncatingTail
-            elem.titleLabel?.textAlignment = pagerReference.itemAlignment
             elem.titleLabel?.numberOfLines = pagerReference.itemMaxLines
             elem.setTitleColor(pagerReference.itemColor, for: .normal)
-            elem.contentHorizontalAlignment = UIControlContentHorizontalAlignment.left
+            elem.contentHorizontalAlignment = pagerReference.itemAlignment
         }
         setSelected(index: selectedElem)
         
