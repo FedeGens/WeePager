@@ -52,7 +52,7 @@ class MenuView: UIScrollView {
                 menuButton.contentHorizontalAlignment = pagerReference.itemAlignment
             }
             
-            var myButtonWidth = menuButton.intrinsicContentSize.width * ((pagerReference.itemBoldSelected) ? 1.05 : 1) // adjust for bold
+            var myButtonWidth = menuButton.intrinsicContentSize.width * ((pagerReference.itemBoldSelected) ? 1.07 : 1) // adjust for bold
             let myItemInset = (i != 0) ? pagerReference.itemInset : 0
             if myButtonWidth < pagerReference.itemMinWidth {
                 myButtonWidth = pagerReference.itemMinWidth
@@ -101,7 +101,7 @@ class MenuView: UIScrollView {
     internal func updateLayout() {
         var myOffset: CGFloat = pagerReference.menuInset
         for elem in buttons {
-            var myButtonWidth = elem.intrinsicContentSize.width * ((pagerReference.itemBoldSelected) ? 1.05 : 1) //adjust for bold
+            var myButtonWidth = elem.intrinsicContentSize.width * ((pagerReference.itemBoldSelected) ? 1.07 : 1) //adjust for bold
             let myItemInset = (buttons.index(of: elem) != 0) ? pagerReference.itemInset : 0
             if myButtonWidth < pagerReference.itemMinWidth {
                 myButtonWidth = pagerReference.itemMinWidth

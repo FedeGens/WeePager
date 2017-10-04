@@ -18,16 +18,15 @@ public class WeePager: UIView {
     public var delegate: MyPagerDelegate?
     public var isLoaded: Bool = false
     public var bodyInteractable: Bool = true {
-        didSet{
+        didSet {
             body?.isUserInteractionEnabled = bodyInteractable
         }
     }
     public var menuInteractable: Bool = true {
-        didSet{
+        didSet {
             menu?.isUserInteractionEnabled = menuInteractable
         }
     }
-    
     private var menuLeftConst: NSLayoutConstraint!
     private var bodyTopConst: NSLayoutConstraint!
     
@@ -115,6 +114,9 @@ public class WeePager: UIView {
         menu.bodyReference = body
         body.menuReference = menu
         menu.setSelected(index: page)
+        
+        body.isUserInteractionEnabled = bodyInteractable
+        menu.isUserInteractionEnabled = menuInteractable
         
         self.addSubview(body)
         self.addSubview(menu)
