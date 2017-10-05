@@ -130,6 +130,7 @@ class MenuView: UIScrollView {
     }
     
     @objc private func buttonPressed(sender: UIButton) {
+        pagerReference.delegate?.pagerMenuSelected?(index: sender.tag)
         bodyReference.moveToPage(index: sender.tag, animated: pagerReference.animateMenuSelectionScroll)
         if !pagerReference.animateMenuSelectionScroll {
             moveIndicator(offsetX: Double(self.frame.width)*Double(sender.tag))

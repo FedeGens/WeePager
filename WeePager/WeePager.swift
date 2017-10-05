@@ -78,6 +78,12 @@ public class WeePager: UIView {
     @IBInspectable public var bodyScrollable : Bool = true
     @IBInspectable public var bodyBounceable : Bool = true
     
+    @IBInspectable public var menuScrollable : Bool = true {
+        didSet {
+            menu?.isScrollEnabled = menuScrollable
+        }
+    }
+    
     @IBInspectable public var infiniteScroll : Bool = false
     
     public func set(viewControllers: [UIViewController], titles: [String]?, images: [UIImage]?) {
@@ -117,6 +123,8 @@ public class WeePager: UIView {
         
         body.isUserInteractionEnabled = bodyInteractable
         menu.isUserInteractionEnabled = menuInteractable
+        
+        menu.isScrollEnabled = menuScrollable
         
         self.addSubview(body)
         self.addSubview(menu)
@@ -279,5 +287,6 @@ public enum menuPosition : String {
     @objc optional func pagerDidMoveToPage(index: Int)
     @objc optional func pagerIsMovingToPage(index: Int)
     @objc optional func percentageScrolled(percentage: Double)
+    @objc optional func pagerMenuSelected(index: Int)
 }
 
