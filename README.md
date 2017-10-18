@@ -5,6 +5,7 @@ WeePager is a simple, funny and fully customizable pager for iOS. Wee!
 
 ## Installation
 Using Cocoapods:
+
 Swift 3:
 ```ruby
 use_frameworks!
