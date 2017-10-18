@@ -140,7 +140,7 @@ public class WeePager: UIView {
         menuLeftConst = NSLayoutConstraint(item: menu, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1.0, constant: 0)
         self.addConstraint(menuLeftConst)
         let rightConst = NSLayoutConstraint(item: menu, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1.0, constant: 0)
-        rightConst.priority = 750
+        rightConst.priority = UILayoutPriority(rawValue: 750)
         self.addConstraint(rightConst)
         self.addConstraint(NSLayoutConstraint(item: menu, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: self.menuHeight))
         self.addConstraint(NSLayoutConstraint(item: body, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1.0, constant: 0))
@@ -155,7 +155,7 @@ public class WeePager: UIView {
             bodyTopConst = NSLayoutConstraint(item: separator, attribute: .bottom, relatedBy: .equal, toItem: body, attribute: .top, multiplier: 1.0, constant: -separatorMarginBottom)
             self.addConstraint(bodyTopConst)
             let bodyBotConst = NSLayoutConstraint(item: body, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1.0, constant: 0)
-            bodyBotConst.priority = 750
+            bodyBotConst.priority = UILayoutPriority(rawValue: 750)
             self.addConstraint(bodyBotConst)
         } else {
             self.addConstraint(NSLayoutConstraint(item: menu, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1.0, constant: 0))
