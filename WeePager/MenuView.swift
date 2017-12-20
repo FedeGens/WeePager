@@ -165,11 +165,17 @@ class MenuView: UIScrollView {
     }
     
     private func getButtonPosition(index: Int) -> CGFloat {
+        guard buttons.count > index else {
+            return 0
+        }
         let position = buttons[index].frame.origin.x + buttons[index].frame.width/2
         return position
     }
     
     private func getButtonDistance(index: Int) -> CGFloat {
+        guard buttons.count > 0 else {
+            return 0
+        }
         let distance = (index+1 < buttons.count) ? getButtonPosition(index: index+1) - getButtonPosition(index: index) : buttons[index].frame.width
         return distance
     }
