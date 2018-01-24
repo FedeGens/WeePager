@@ -35,6 +35,7 @@ public class WeePager: UIView {
     @IBInspectable public var initialPage : Int = 0
     @IBInspectable public var animateMenuSelectionScroll : Bool = true
     
+    @IBInspectable public var menuVisible : Bool = true
     @IBInspectable public var menuHeight : CGFloat = 50
     public var menuPosition : menuPosition = .top
     @IBInspectable public var menuBackgroundColor : UIColor = .white
@@ -93,42 +94,44 @@ public class WeePager: UIView {
             return
         }
         
-        var titleArray = [String]()
-        if titles == nil || titles?.count != viewControllers.count {
-            for elem in viewControllers {
-                let title = (elem.title != nil) ? elem.title! : ""
-                titleArray.append(title)
-            }
-        } else {
-            titleArray = titles!
-        }
-        
-        if menu != nil {
-            menu.removeFromSuperview()
+        if body != nil {
+            menu?.removeFromSuperview()
             body.removeFromSuperview()
             separator.removeFromSuperview()
         }
         
-        menu = MenuView(frame: CGRect(x: 0, y: (self.menuPosition == .top) ? 0 : self.frame.height-self.menuHeight, width:self.frame.width, height: self.menuHeight), titles: titleArray, images: images, pagerReference: self)
+        //body setup
         body = BodyView(frame: CGRect(x: 0, y: (self.menuPosition == .top) ? self.menuHeight : 0, width:self.frame.width, height: self.frame.height-self.menuHeight), viewControllers: viewControllers, pagerReference: self)
-        separator.backgroundColor = separatorColor
-        
-        menu.translatesAutoresizingMaskIntoConstraints = false
         body.translatesAutoresizingMaskIntoConstraints = false
-        separator.translatesAutoresizingMaskIntoConstraints = false
-        
-        menu.bodyReference = body
-        body.menuReference = menu
-        menu.setSelected(index: page)
-        
         body.isUserInteractionEnabled = bodyInteractable
-        menu.isUserInteractionEnabled = menuInteractable
-        
-        menu.isScrollEnabled = menuScrollable
-        
         self.addSubview(body)
-        self.addSubview(menu)
-        self.addSubview(separator)
+
+        if menuVisible {
+            //menu setup
+            var titleArray = [String]()
+            if titles == nil || titles?.count != viewControllers.count {
+                for elem in viewControllers {
+                    let title = (elem.title != nil) ? elem.title! : ""
+                    titleArray.append(title)
+                }
+            } else {
+                titleArray = titles!
+            }
+            menu = MenuView(frame: CGRect(x: 0, y: (self.menuPosition == .top) ? 0 : self.frame.height-self.menuHeight, width:self.frame.width, height: self.menuHeight), titles: titleArray, images: images, pagerReference: self)
+            menu.translatesAutoresizingMaskIntoConstraints = false
+            menu.setSelected(index: page)
+            menu.isUserInteractionEnabled = menuInteractable
+            menu.isScrollEnabled = menuScrollable
+            self.addSubview(menu)
+            
+            //separator setup
+            separator.backgroundColor = separatorColor
+            separator.translatesAutoresizingMaskIntoConstraints = false
+            self.addSubview(separator)
+        }
+        
+        body.menuReference = menu
+        menu?.bodyReference = body
         
         setConstraints()
         isLoaded = true
@@ -137,18 +140,25 @@ public class WeePager: UIView {
     }
     
     private func setConstraints() {
+        guard menuVisible else{
+            self.addConstraint(NSLayoutConstraint(item: body, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1.0, constant: 0))
+            self.addConstraint(NSLayoutConstraint(item: body, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1.0, constant: 0))
+            self.addConstraint(NSLayoutConstraint(item: body, attribute: .top, relatedBy: .equal, toItem: self, attribute: .top, multiplier: 1.0, constant: 0))
+            let bodyBotConst = NSLayoutConstraint(item: body, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1.0, constant: 0)
+            bodyBotConst.priority = 750
+            self.addConstraint(bodyBotConst)
+            return
+        }
+        
         menuLeftConst = NSLayoutConstraint(item: menu, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1.0, constant: 0)
         self.addConstraint(menuLeftConst)
         let rightConst = NSLayoutConstraint(item: menu, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1.0, constant: 0)
         rightConst.priority = 750
         self.addConstraint(rightConst)
         self.addConstraint(NSLayoutConstraint(item: menu, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: self.menuHeight))
-        self.addConstraint(NSLayoutConstraint(item: body, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1.0, constant: 0))
-        self.addConstraint(NSLayoutConstraint(item: body, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1.0, constant: 0))
         self.addConstraint(NSLayoutConstraint(item: separator, attribute: .leading, relatedBy: .equal, toItem: menu, attribute: .leading, multiplier: 1.0, constant: self.separatorInset))
         self.addConstraint(NSLayoutConstraint(item: separator, attribute: .trailing, relatedBy: .equal, toItem: menu, attribute: .trailing, multiplier: 1.0, constant: -self.separatorInset))
         self.addConstraint(NSLayoutConstraint(item: separator, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: self.separatorHeight))
-        
         if self.menuPosition == .top {
             self.addConstraint(NSLayoutConstraint(item: menu, attribute: .top, relatedBy: .equal, toItem: self, attribute: .top, multiplier: 1.0, constant: 0))
             self.addConstraint(NSLayoutConstraint(item: menu, attribute: .bottom, relatedBy: .equal, toItem: separator, attribute: .top, multiplier: 1.0, constant: -separatorMarginTop))
@@ -163,7 +173,6 @@ public class WeePager: UIView {
             self.addConstraint(NSLayoutConstraint(item: separator, attribute: .top, relatedBy: .equal, toItem: body, attribute: .bottom, multiplier: 1.0, constant: separatorMarginTop))
             self.addConstraint(NSLayoutConstraint(item: body, attribute: .top, relatedBy: .equal, toItem: self, attribute: .top, multiplier: 1.0, constant: 0))
         }
-        
     }
     
     override public func layoutSubviews() {
@@ -173,7 +182,7 @@ public class WeePager: UIView {
         body.delegate = nil
         super.layoutSubviews()
         body.updateLayout()
-        menu.updateLayout()
+        menu?.updateLayout()
         body.delegate = body
     }
     
@@ -201,7 +210,7 @@ public class WeePager: UIView {
         
         if page != index {
             page = index
-            menu.setSelected(index: page)
+            menu?.setSelected(index: page)
             delegate?.pagerIsMovingToPage?(index: page)
         }
     }
@@ -263,11 +272,11 @@ public class WeePager: UIView {
     
     public func set(menuShadowVisible visible: Bool) {
         self.menuShadowEnabled = visible
-        self.menu.setShadow()
+        self.menu?.setShadow()
     }
     
     public func refreshMenuProperties() {
-        menu.refreshMenuProperties()
+        menu?.refreshMenuProperties()
     }
 }
 

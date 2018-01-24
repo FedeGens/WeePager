@@ -14,7 +14,7 @@ class BodyView: UIScrollView, UIScrollViewDelegate {
     private var initialPosition : Double!
     var viewControllers : [UIViewController] = [UIViewController]()
     var infiniteViewControllers : [UIViewController] = [UIViewController]()
-    var menuReference: MenuView!
+    var menuReference: MenuView?
     var pagerReference: WeePager!
     
     init(frame: CGRect, viewControllers: [UIViewController], pagerReference: WeePager) {
@@ -51,7 +51,7 @@ class BodyView: UIScrollView, UIScrollViewDelegate {
         }
         self.contentSize = CGSize(width: frame.width*CGFloat(viewControllers.count), height: frame.height)
         self.contentOffset.x = CGFloat(pagerReference.getPage()) * self.frame.width
-        menuReference.moveIndicator(offsetX: Double(self.contentOffset.x))
+        menuReference?.moveIndicator(offsetX: Double(self.contentOffset.x))
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -82,7 +82,7 @@ class BodyView: UIScrollView, UIScrollViewDelegate {
     internal func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if !pagerReference.infiniteScroll {
             pagerReference.isSettingPage(index: (self.currentHalfPage < viewControllers.count) ? self.currentHalfPage : viewControllers.count-1)
-            menuReference.moveIndicator(offsetX: Double(scrollView.contentOffset.x))
+            menuReference?.moveIndicator(offsetX: Double(scrollView.contentOffset.x))
         } else {
             pagerReference.isSettingPage(index: self.currentHalfPageInfinite)
         }
