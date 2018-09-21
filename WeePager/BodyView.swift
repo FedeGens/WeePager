@@ -23,6 +23,7 @@ class BodyView: UIScrollView, UIScrollViewDelegate {
         self.pagerReference = pagerReference
         self.isPagingEnabled = true
         self.showsHorizontalScrollIndicator = false
+        self.showsVerticalScrollIndicator = false
         self.clipsToBounds = pagerReference.clipsToBounds
         self.isScrollEnabled = pagerReference.bodyScrollable
         self.bounces = pagerReference.bodyBounceable
@@ -49,7 +50,7 @@ class BodyView: UIScrollView, UIScrollViewDelegate {
             elem.view.frame.size = self.frame.size
             elem.view.frame.origin.x = CGFloat(index)*self.frame.width
         }
-        self.contentSize = CGSize(width: frame.width*CGFloat(viewControllers.count), height: frame.height)
+        self.contentSize = CGSize(width: frame.width*CGFloat(viewControllers.count), height: 1.0)
         self.contentOffset.x = CGFloat(pagerReference.getPage()) * self.frame.width
         menuReference?.moveIndicator(offsetX: Double(self.contentOffset.x))
     }
