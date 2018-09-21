@@ -6,9 +6,10 @@ s.ios.deployment_target = '8.0'
 s.name = "WeePager"
 s.summary = "WeePager is a weeeeee pager."
 s.requires_arc = true
+s.swift_version = '4.0'
 
 # 2
-s.version = "0.0.46"
+s.version = "0.0.47"
 
 # 3
 s.license = { :type => "MIT", :file => "LICENSE" }
