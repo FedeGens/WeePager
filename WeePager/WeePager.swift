@@ -105,7 +105,7 @@ public class WeePager: UIView {
         body.translatesAutoresizingMaskIntoConstraints = false
         body.isUserInteractionEnabled = bodyInteractable
         self.addSubview(body)
-
+        
         if menuVisible {
             //menu setup
             var titleArray = [String]()
@@ -119,6 +119,8 @@ public class WeePager: UIView {
             }
             menu = MenuView(frame: CGRect(x: 0, y: (self.menuPosition == .top) ? 0 : self.frame.height-self.menuHeight, width:self.frame.width, height: self.menuHeight), titles: titleArray, images: images, pagerReference: self)
             menu.translatesAutoresizingMaskIntoConstraints = false
+            body.menuReference = menu
+            menu?.bodyReference = body
             menu.setSelected(index: page)
             menu.isUserInteractionEnabled = menuInteractable
             menu.isScrollEnabled = menuScrollable
@@ -129,9 +131,6 @@ public class WeePager: UIView {
             separator.translatesAutoresizingMaskIntoConstraints = false
             self.addSubview(separator)
         }
-        
-        body.menuReference = menu
-        menu?.bodyReference = body
         
         setConstraints()
         isLoaded = true
@@ -159,6 +158,8 @@ public class WeePager: UIView {
         self.addConstraint(NSLayoutConstraint(item: separator, attribute: .leading, relatedBy: .equal, toItem: menu, attribute: .leading, multiplier: 1.0, constant: self.separatorInset))
         self.addConstraint(NSLayoutConstraint(item: separator, attribute: .trailing, relatedBy: .equal, toItem: menu, attribute: .trailing, multiplier: 1.0, constant: -self.separatorInset))
         self.addConstraint(NSLayoutConstraint(item: separator, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: self.separatorHeight))
+        self.addConstraint(NSLayoutConstraint(item: body, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1.0, constant: 0))
+        self.addConstraint(NSLayoutConstraint(item: body, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1.0, constant: 0))
         if self.menuPosition == .top {
             self.addConstraint(NSLayoutConstraint(item: menu, attribute: .top, relatedBy: .equal, toItem: self, attribute: .top, multiplier: 1.0, constant: 0))
             self.addConstraint(NSLayoutConstraint(item: menu, attribute: .bottom, relatedBy: .equal, toItem: separator, attribute: .top, multiplier: 1.0, constant: -separatorMarginTop))
