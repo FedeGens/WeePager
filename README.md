@@ -25,7 +25,7 @@ Alternatively you can just import the classes from "WeePager" folder.
 
 ## How to use
 
-###Initialize WeePager
+### Initialize WeePager
 
 ##### Storyboard
 - Drag a UIView inside your UIViewController
