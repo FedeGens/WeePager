@@ -13,7 +13,7 @@ Alternatively you can just import the classes from "WeePager" folder.
 
 ## Requirements
 - iOS 8.0+ 
-- Swift 3.0
+- Swift 4.0
 
 ## How to use
 
