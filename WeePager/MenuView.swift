@@ -102,7 +102,7 @@ class MenuView: UIScrollView {
         var myOffset: CGFloat = pagerReference.menuInset
         for elem in buttons {
             var myButtonWidth = elem.intrinsicContentSize.width * ((pagerReference.itemBoldSelected) ? 1.07 : 1) //adjust for bold
-            let myItemInset = (buttons.firstIndex(of: elem) != 0) ? pagerReference.itemInset : 0
+            let myItemInset = (buttons.index(of: elem) != 0) ? pagerReference.itemInset : 0
             if myButtonWidth < pagerReference.itemMinWidth {
                 myButtonWidth = pagerReference.itemMinWidth
             }

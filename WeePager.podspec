@@ -2,13 +2,13 @@ Pod::Spec.new do |s|
 
 # 1
 s.platform = :ios
-s.ios.deployment_target = '12.0'
+s.ios.deployment_target = '8.0'
 s.name = "WeePager"
 s.summary = "WeePager is a weeeeee pager."
 s.requires_arc = true
 
 # 2
-s.version = "0.1.0"
+s.version = "0.0.42"
 
 # 3
 s.license = { :type => "MIT", :file => "LICENSE" }

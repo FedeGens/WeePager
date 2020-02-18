@@ -32,14 +32,13 @@ class BasicTextHeader: UIView {
         backGroundToolbar.translatesAutoresizingMaskIntoConstraints = false
         self.addSubview(backGroundToolbar)
         
-        self.addConstraint(NSLayoutConstraint(item: backGroundToolbar, attribute: .leading, relatedBy:
-            .equal, toItem: self, attribute: .leading, multiplier: 1.0, constant: 0))
+        self.addConstraint(NSLayoutConstraint(item: backGroundToolbar, attribute: NSLayoutAttribute.leading, relatedBy: NSLayoutRelation.equal, toItem: self, attribute: NSLayoutAttribute.leading, multiplier: 1.0, constant: 0))
         
-        self.addConstraint(NSLayoutConstraint(item: backGroundToolbar, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1.0, constant: 0))
+        self.addConstraint(NSLayoutConstraint(item: backGroundToolbar, attribute: NSLayoutAttribute.trailing, relatedBy: NSLayoutRelation.equal, toItem: self, attribute: NSLayoutAttribute.trailing, multiplier: 1.0, constant: 0))
         
-        self.addConstraint(NSLayoutConstraint(item: backGroundToolbar, attribute: .top, relatedBy: .equal, toItem: self, attribute: .top, multiplier: 1.0, constant: 0))
+        self.addConstraint(NSLayoutConstraint(item: backGroundToolbar, attribute: NSLayoutAttribute.top, relatedBy: NSLayoutRelation.equal, toItem: self, attribute: NSLayoutAttribute.top, multiplier: 1.0, constant: 0))
         
-        self.addConstraint(NSLayoutConstraint(item: backGroundToolbar, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1.0, constant: 0))
+        self.addConstraint(NSLayoutConstraint(item: backGroundToolbar, attribute: NSLayoutAttribute.bottom, relatedBy: NSLayoutRelation.equal, toItem: self, attribute: NSLayoutAttribute.bottom, multiplier: 1.0, constant: 0))
         
         //set headerlabel constraints
         headerLabel.numberOfLines = 0
@@ -48,13 +47,13 @@ class BasicTextHeader: UIView {
         
         self.addSubview(headerLabel)
         
-        self.addConstraint(NSLayoutConstraint(item: headerLabel, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1.0, constant: 8))
+        self.addConstraint(NSLayoutConstraint(item: headerLabel, attribute: NSLayoutAttribute.leading, relatedBy: NSLayoutRelation.equal, toItem: self, attribute: NSLayoutAttribute.leading, multiplier: 1.0, constant: 8))
         
-        self.addConstraint(NSLayoutConstraint(item: headerLabel, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1.0, constant: -8))
+        self.addConstraint(NSLayoutConstraint(item: headerLabel, attribute: NSLayoutAttribute.trailing, relatedBy: NSLayoutRelation.equal, toItem: self, attribute: NSLayoutAttribute.trailing, multiplier: 1.0, constant: -8))
         
-        self.addConstraint(NSLayoutConstraint(item: headerLabel, attribute: .top, relatedBy: .equal, toItem: self, attribute: .top, multiplier: 1.0, constant: 8))
+        self.addConstraint(NSLayoutConstraint(item: headerLabel, attribute: NSLayoutAttribute.top, relatedBy: NSLayoutRelation.equal, toItem: self, attribute: NSLayoutAttribute.top, multiplier: 1.0, constant: 8))
         
-        self.addConstraint(NSLayoutConstraint(item: headerLabel, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1.0, constant: -8))
+        self.addConstraint(NSLayoutConstraint(item: headerLabel, attribute: NSLayoutAttribute.bottom, relatedBy: NSLayoutRelation.equal, toItem: self, attribute: NSLayoutAttribute.bottom, multiplier: 1.0, constant: -8))
         
     }
     

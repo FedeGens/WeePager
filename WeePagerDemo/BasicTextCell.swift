@@ -12,7 +12,7 @@ class BasicTextCell: UITableViewCell {
     
     let cellLabel = UILabel()
     
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         cellLabel.numberOfLines = 0
@@ -21,13 +21,13 @@ class BasicTextCell: UITableViewCell {
         
         self.contentView.addSubview(cellLabel)
         
-        self.contentView.addConstraint(NSLayoutConstraint(item: cellLabel, attribute: .leading, relatedBy: .equal, toItem: self.contentView, attribute: .leading, multiplier: 1.0, constant: 8))
+        self.contentView.addConstraint(NSLayoutConstraint(item: cellLabel, attribute: NSLayoutAttribute.leading, relatedBy: NSLayoutRelation.equal, toItem: self.contentView, attribute: NSLayoutAttribute.leading, multiplier: 1.0, constant: 8))
         
-        self.contentView.addConstraint(NSLayoutConstraint(item: cellLabel, attribute: .trailing, relatedBy: .equal, toItem: self.contentView, attribute: .trailing, multiplier: 1.0, constant: -8))
+        self.contentView.addConstraint(NSLayoutConstraint(item: cellLabel, attribute: NSLayoutAttribute.trailing, relatedBy: NSLayoutRelation.equal, toItem: self.contentView, attribute: NSLayoutAttribute.trailing, multiplier: 1.0, constant: -8))
         
-        self.contentView.addConstraint(NSLayoutConstraint(item: cellLabel, attribute: .top, relatedBy: .equal, toItem: self.contentView, attribute: .top, multiplier: 1.0, constant: 8))
+        self.contentView.addConstraint(NSLayoutConstraint(item: cellLabel, attribute: NSLayoutAttribute.top, relatedBy: NSLayoutRelation.equal, toItem: self.contentView, attribute: NSLayoutAttribute.top, multiplier: 1.0, constant: 8))
         
-        self.contentView.addConstraint(NSLayoutConstraint(item: cellLabel, attribute: .bottom, relatedBy: .equal, toItem: self.contentView, attribute: .bottom, multiplier: 1.0, constant: -8))
+        self.contentView.addConstraint(NSLayoutConstraint(item: cellLabel, attribute: NSLayoutAttribute.bottom, relatedBy: NSLayoutRelation.equal, toItem: self.contentView, attribute: NSLayoutAttribute.bottom, multiplier: 1.0, constant: -8))
         
     }
     
