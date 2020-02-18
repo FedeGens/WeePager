@@ -22,7 +22,7 @@ class RootTableView: UITableView, UITableViewDelegate, UITableViewDataSource {
         sections = [Section]()
     }
     
-    override init(frame: CGRect, style: UITableViewStyle) {
+    override init(frame: CGRect, style: UITableView.Style) {
         super.init(frame: frame, style: style)
     }
     
@@ -38,11 +38,11 @@ class RootTableView: UITableView, UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return (self.sections[section].headerHeight == nil) ? UITableViewAutomaticDimension : sections[section].headerHeight!
+        return (self.sections[section].headerHeight == nil) ? UITableView.automaticDimension : sections[section].headerHeight!
     }
     
     func tableView(_ tableView: UITableView, estimatedHeightForHeaderInSection section: Int) -> CGFloat {
-        return (self.sections[section].header == nil) ? UITableViewAutomaticDimension : 10
+        return (self.sections[section].header == nil) ? UITableView.automaticDimension : 10
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -55,11 +55,11 @@ class RootTableView: UITableView, UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return (self.sections[indexPath.section].rows[indexPath.row].height == nil) ? UITableViewAutomaticDimension : self.sections[indexPath.section].rows[indexPath.row].height!
+        return (self.sections[indexPath.section].rows[indexPath.row].height == nil) ? UITableView.automaticDimension : self.sections[indexPath.section].rows[indexPath.row].height!
     }
     
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
-        return UITableViewAutomaticDimension
+        return UITableView.automaticDimension
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -173,7 +173,7 @@ class RootTableView: UITableView, UITableViewDelegate, UITableViewDataSource {
         self.reloadData()
     }
     
-    /// Set cell's height ina a section at a specific index
+    /// Set cell's height in a a section at a specific index
     ///
     /// - Parameters:
     ///   - height: cell's height

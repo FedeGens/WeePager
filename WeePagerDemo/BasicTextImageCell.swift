@@ -13,7 +13,7 @@ class BasicTextImageCell: UITableViewCell {
     let cellLabel = UILabel()
     let cellImage = UIImageView()
     
-    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         //Set Image

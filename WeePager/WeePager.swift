@@ -57,7 +57,7 @@ public class WeePager: UIView {
     @IBInspectable public var itemMinWidth : CGFloat = 50
     @IBInspectable public var itemMaxWidth : CGFloat = 150
     @IBInspectable public var itemInset : CGFloat = 16
-    @IBInspectable public var itemAlignment : UIControlContentHorizontalAlignment = .center
+    @IBInspectable public var itemAlignment : UIControl.ContentHorizontalAlignment = .center
     
     @IBInspectable public var itemBoldSelected : Bool = true
     @IBInspectable public var itemCanColor : Bool = true
@@ -139,14 +139,9 @@ public class WeePager: UIView {
     }
     
     private func setConstraints() {
-        guard menuVisible else{
-            self.addConstraint(NSLayoutConstraint(item: body, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1.0, constant: 0))
-            self.addConstraint(NSLayoutConstraint(item: body, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1.0, constant: 0))
-            self.addConstraint(NSLayoutConstraint(item: body, attribute: .top, relatedBy: .equal, toItem: self, attribute: .top, multiplier: 1.0, constant: 0))
-            let bodyBotConst = NSLayoutConstraint(item: body, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1.0, constant: 0)
-            bodyBotConst.priority = UILayoutPriority(rawValue: 750)
-            self.addConstraint(bodyBotConst)
-            return
+        guard let menu = menu,
+            let body = body else {
+                return
         }
         
         menuLeftConst = NSLayoutConstraint(item: menu, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1.0, constant: 0)
@@ -257,7 +252,7 @@ public class WeePager: UIView {
         bodyTopConst.constant = (show) ? -self.frame.height : 0
     }
     
-    public func animate(show: Bool, time: Double, options: UIViewAnimationOptions, completion: (()->())? = nil ) {
+    public func animate(show: Bool, time: Double, options: UIView.AnimationOptions, completion: (()->())? = nil ) {
         menuLeftConst.constant = (show) ? 0 : UIScreen.main.bounds.width+16
         bodyTopConst.constant = (show) ? 0 : -self.frame.height
         

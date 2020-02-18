@@ -35,7 +35,7 @@ class BodyView: UIScrollView, UIScrollViewDelegate {
                 self.addSubview(elem.view)
             }
         }
-        self.decelerationRate = UIScrollViewDecelerationRateNormal
+        self.decelerationRate = UIScrollView.DecelerationRate.normal
     }
     
     internal func updateLayout() {
@@ -46,7 +46,7 @@ class BodyView: UIScrollView, UIScrollViewDelegate {
         }
         
         for elem in viewControllers {
-            let index = viewControllers.index(of: elem)!
+            let index = viewControllers.firstIndex(of: elem)!
             elem.view.frame.size = self.frame.size
             elem.view.frame.origin.x = CGFloat(index)*self.frame.width
         }
@@ -156,17 +156,17 @@ class BodyView: UIScrollView, UIScrollViewDelegate {
         selectedVC.view.frame.origin.x = 0
         
         for elem in vcRightArr {
-            let index = vcRightArr.index(of: elem)! + 1
+            let index = vcRightArr.firstIndex(of: elem)! + 1
             elem.view.frame.size = self.frame.size
             elem.view.frame.origin.x = CGFloat(index)*self.frame.width
         }
         
         for elem in vcLeftArr.reversed() {
-            let index = vcLeftArr.index(of: elem)! + 1
+            let index = vcLeftArr.firstIndex(of: elem)! + 1
             elem.view.frame.size = self.frame.size
             elem.view.frame.origin.x = -CGFloat(index)*self.frame.width
         }
-        self.contentInset = UIEdgeInsetsMake(0, CGFloat(vcLeftArr.count)*self.frame.width, 0, 0)
+        self.contentInset = UIEdgeInsets(top: 0, left: CGFloat(vcLeftArr.count)*self.frame.width, bottom: 0, right: 0)
         self.contentSize = CGSize(width: frame.width*CGFloat(vcRightArr.count), height: frame.height)
         self.contentOffset.x = 0
         pagerReference.bodyOldIndex = 0
@@ -185,7 +185,7 @@ class BodyView: UIScrollView, UIScrollViewDelegate {
         lastVc.view.frame.origin.x = infiniteViewControllers.first!.view.frame.origin.x - self.frame.width
         infiniteViewControllers.insert(lastVc, at: 0)
         
-        self.contentInset = UIEdgeInsetsMake(0, self.contentInset.left+self.frame.width, 0, 0)
+        self.contentInset = UIEdgeInsets(top: 0, left: self.contentInset.left+self.frame.width, bottom: 0, right: 0)
     }
 }
 
