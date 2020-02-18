@@ -167,7 +167,7 @@ class Cachy {
     }
     
     private static func saveImageToDirectory(image: UIImage, name: String) {
-        if let data = UIImageJPEGRepresentation(image, 0.3) {
+        if let data = image.jpegData(compressionQuality: 0.3) {
             let (timestamp, myName, myFilename) = createFilename(name: name)
             let filename = getCachyDirectory().appendingPathComponent(myFilename)
             if !checkImageExists(name: myName) {
