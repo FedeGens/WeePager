@@ -172,8 +172,10 @@ public class WeePager: UIView {
         }
         body.delegate = nil
         super.layoutSubviews()
-        body.updateLayout()
+        menu.frame = CGRect(x: 0, y: (self.menuPosition == .top) ? 0 : self.frame.height-self.menuHeight, width: self.frame.width, height: self.menuHeight)
         menu.updateLayout()
+        body.frame = CGRect(x: 0, y: (self.menuPosition == .top) ? self.menuHeight : 0, width:self.frame.width, height: self.frame.height-self.menuHeight)
+        body.updateLayout()
         body.delegate = body
     }
     

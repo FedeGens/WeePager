@@ -65,6 +65,18 @@ class MenuView: UIScrollView {
             menuButton.addTarget(self, action: #selector(MenuView.buttonPressed(sender:)), for: .touchUpInside)
             
             buttons.append(menuButton)
+            
+            if buttons.count == 1 {
+                let indicatorY = ((pagerReference.indicatorAlign == .top) ? 0 : (pagerReference.indicatorAlign == .bottom) ? self.frame.height-pagerReference.indicatorHeight : (self.frame.height-pagerReference.indicatorHeight) / 2) - pagerReference.indicatorOffsetY
+                let indicatorWidth = (pagerReference.indicatorWidthAnimated) ? buttons[0].frame.width : pagerReference.indicatorWidth
+                indicator = pagerReference.indicatorView
+                indicator.frame = CGRect(x: pagerReference.menuInset + buttons[0].frame.width/2 - indicatorWidth/2, y: indicatorY, width: indicatorWidth, height: pagerReference.indicatorHeight)
+                indicator.layer.cornerRadius = pagerReference.indicatorCornerRadius
+                indicator.backgroundColor = pagerReference.indicatorColor
+                indicator.alpha = pagerReference.indicatorAlpha
+                self.addSubview(indicator)
+            }
+            
             self.addSubview(menuButton)
             myOffset += menuButton.frame.width + myItemInset
         }
@@ -84,15 +96,6 @@ class MenuView: UIScrollView {
         }
         
         contentSize = CGSize(width: myOffset, height: pagerReference.menuHeight)
-        
-        let indicatorY = ((pagerReference.indicatorAlign == .top) ? 0 : (pagerReference.indicatorAlign == .bottom) ? self.frame.height-pagerReference.indicatorHeight : (self.frame.height-pagerReference.indicatorHeight) / 2) - pagerReference.indicatorOffsetY
-        let indicatorWidth = (pagerReference.indicatorWidthAnimated) ? buttons[0].frame.width : pagerReference.indicatorWidth
-        indicator = pagerReference.indicatorView
-        indicator.frame = CGRect(x: pagerReference.menuInset + buttons[0].frame.width/2 - indicatorWidth/2, y: indicatorY, width: indicatorWidth, height: pagerReference.indicatorHeight)
-        indicator.layer.cornerRadius = pagerReference.indicatorCornerRadius
-        indicator.backgroundColor = pagerReference.indicatorColor
-        indicator.alpha = pagerReference.indicatorAlpha
-        self.addSubview(indicator)
         
         //Shadow
         setShadow()
@@ -127,6 +130,8 @@ class MenuView: UIScrollView {
         }
         contentSize = CGSize(width: myOffset, height: pagerReference.menuHeight)
         indicator.frame.origin.x = getButtonPosition(index: pagerReference.getPage()) - indicator.frame.width/2
+        let indicatorY = ((pagerReference.indicatorAlign == .top) ? 0 : (pagerReference.indicatorAlign == .bottom) ? self.frame.height-pagerReference.indicatorHeight : (self.frame.height-pagerReference.indicatorHeight) / 2) - pagerReference.indicatorOffsetY
+        indicator.frame = CGRect(x: indicator.frame.origin.x, y: indicatorY, width: indicator.frame.width, height: pagerReference.indicatorHeight)
     }
     
     @objc private func buttonPressed(sender: UIButton) {
